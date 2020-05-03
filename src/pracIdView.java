@@ -5,6 +5,8 @@ import javax.swing.JLabel;
 import java.awt.BorderLayout;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class pracIdView {
 
@@ -53,6 +55,13 @@ public class pracIdView {
 		pracId.setColumns(10);
 		
 		JButton pracIdbutton = new JButton("Enter");
+		pracIdbutton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frame.dispose();
+				patientListView patientList = new patientListView();
+				patientList.patientScreen();
+			}
+		});
 		pracIdbutton.setBounds(163, 166, 109, 23);
 		frame.getContentPane().add(pracIdbutton);
 	}
