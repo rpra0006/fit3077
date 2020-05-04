@@ -8,9 +8,9 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class pracIdView {
+public class PracIdView {
 
-	private JFrame frame;
+	private JFrame frmFit;
 	private JTextField pracId;
 
 	/**
@@ -20,8 +20,8 @@ public class pracIdView {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					pracIdView window = new pracIdView();
-					window.frame.setVisible(true);
+					PracIdView window = new PracIdView();
+					window.frmFit.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -32,7 +32,7 @@ public class pracIdView {
 	/**
 	 * Create the application.
 	 */
-	public pracIdView() {
+	public PracIdView() {
 		initialize();
 	}
 
@@ -40,30 +40,32 @@ public class pracIdView {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
+		frmFit = new JFrame();
+		frmFit.setTitle("FIT3077");
+		frmFit.setBounds(100, 100, 450, 300);
+		frmFit.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmFit.getContentPane().setLayout(null);
 		
-		JLabel lblEnterPractitionerId = new JLabel("Enter Practitioner ID: ");
-		lblEnterPractitionerId.setBounds(57, 98, 126, 33);
-		frame.getContentPane().add(lblEnterPractitionerId);
+		JLabel lblEnterPractitionerId = new JLabel("Enter Practitioner ID ");
+		lblEnterPractitionerId.setBounds(163, 72, 126, 33);
+		frmFit.getContentPane().add(lblEnterPractitionerId);
 		
 		pracId = new JTextField();
-		pracId.setBounds(183, 98, 141, 33);
-		frame.getContentPane().add(pracId);
+		pracId.setBounds(148, 99, 141, 33);
+		frmFit.getContentPane().add(pracId);
 		pracId.setColumns(10);
 		
 		JButton pracIdbutton = new JButton("Enter");
 		pracIdbutton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
-				patientListView patientList = new patientListView();
-				patientList.patientScreen();
+				String s = pracId.getText();
+				PatientListView patientList = new PatientListView(s);
+				//patientList.patientScreen();
+				frmFit.dispose();
 			}
 		});
-		pracIdbutton.setBounds(163, 166, 109, 23);
-		frame.getContentPane().add(pracIdbutton);
+		pracIdbutton.setBounds(163, 143, 109, 23);
+		frmFit.getContentPane().add(pracIdbutton);
 	}
 
 }

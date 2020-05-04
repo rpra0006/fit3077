@@ -15,7 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class cholestrolLevelView {
+public class CholestrolLevelView {
 
 	private JFrame frame;
 	private JTable table;
@@ -28,7 +28,7 @@ public class cholestrolLevelView {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					cholestrolLevelView window = new cholestrolLevelView();
+					CholestrolLevelView window = new CholestrolLevelView();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -40,7 +40,7 @@ public class cholestrolLevelView {
 	/**
 	 * Create the application.
 	 */
-	public cholestrolLevelView() {
+	public CholestrolLevelView() {
 		initialize();
 	}
 

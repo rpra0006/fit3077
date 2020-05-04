@@ -6,36 +6,26 @@ import java.awt.BorderLayout;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import org.hl7.fhir.r4.model.Patient;
+
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
-public class patientListView {
+public class PatientListView implements Observer{
 
 	private JFrame frame;
 	private JTable table;
+	private String pracId;
+	private FhirServer server = new FhirApiAdapter();
 	
-	
-	/**
-	 * Launch the application.
-	 */
-	public static void patientScreen() {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					patientListView window = new patientListView();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
 	/**
 	 * Create the application.
 	 */
-	public patientListView() {
+	public PatientListView(String s) {
+		this.pracId = s;
 		initialize();
 	}
 
@@ -61,7 +51,7 @@ public class patientListView {
 			new Object[][] {
 			},
 			new String[] {
-				"Given Name", "Family Name"
+				"Patient ID", "Patient Name"
 			}
 		) {
 			Class[] columnTypes = new Class[] {
@@ -71,8 +61,25 @@ public class patientListView {
 				return columnTypes[columnIndex];
 			}
 		});
+		table.getColumnModel().getColumn(1).setPreferredWidth(85);
 		scrollPane.setViewportView(table);
 		
+		//
+		Object[] columns = {"Patient ID", "Patient Name"};
+		DefaultTableModel model = new DefaultTableModel();
+		model.setColumnIdentifiers(columns);
+		table.setModel(model);
+		
+		ArrayList<Patient> allPatients = server.getAllPractitionerPatients(pracId);
+		for (Patient patient : allPatients) {
+			String[] row = new String[2];
+			row[0] = patient.getIdentifier().get(0).getValue();
+			row[1] = patient.getName().get(0).getNameAsSingleString();
+			model.addRow(row);
+		}
+		
+		
+		//
 		JLabel lblPatientMonitor = new JLabel("Patient Monitor");
 		lblPatientMonitor.setBounds(181, 147, 99, 14);
 		frame.getContentPane().add(lblPatientMonitor);
@@ -80,11 +87,18 @@ public class patientListView {
 		JButton btnCholestrolLevel = new JButton("Cholestrol Level");
 		btnCholestrolLevel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				cholestrolLevelView cholestrolView = new cholestrolLevelView();
+				CholestrolLevelView cholestrolView = new CholestrolLevelView();
 				cholestrolView.cholestrolScreen();
 			}
 		});
-		btnCholestrolLevel.setBounds(50, 172, 152, 23);
+		btnCholestrolLevel.setBounds(138, 172, 152, 23);
 		frame.getContentPane().add(btnCholestrolLevel);
+		this.frame.setVisible(true);
+	}
+
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
 	}
 }
