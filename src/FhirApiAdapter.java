@@ -1,10 +1,7 @@
 import java.util.ArrayList;
 
-<<<<<<< HEAD
-=======
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
->>>>>>> branch 'master' of https://git.infotech.monash.edu/fit3077-s1-2020/Indomie/project.git
 import org.hl7.fhir.r4.model.Encounter;
 import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Patient;
