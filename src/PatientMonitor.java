@@ -5,6 +5,10 @@ public class PatientMonitor implements Subject {
 	private int secondsToUpdate = 10;
 	private ArrayList<Observer> observers = new ArrayList<Observer>();
 	
+	public PatientMonitor() {
+		
+	}
+	
 	public PatientMonitor(Practitioner practitioner) {
 		this.practitioner = practitioner;
 	}
