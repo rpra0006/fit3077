@@ -34,16 +34,16 @@ public class PatientListView implements Observer{
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
+		frame.setBounds(100, 100, 879, 571);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		JLabel patientList = new JLabel("Patient List");
-		patientList.setBounds(188, 11, 81, 14);
+		patientList.setBounds(422, 32, 201, 63);
 		frame.getContentPane().add(patientList);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(76, 39, 305, 94);
+		scrollPane.setBounds(135, 85, 647, 241);
 		frame.getContentPane().add(scrollPane);
 		
 		table = new JTable();
@@ -81,7 +81,7 @@ public class PatientListView implements Observer{
 		
 		//
 		JLabel lblPatientMonitor = new JLabel("Patient Monitor");
-		lblPatientMonitor.setBounds(181, 147, 99, 14);
+		lblPatientMonitor.setBounds(413, 337, 99, 14);
 		frame.getContentPane().add(lblPatientMonitor);
 		
 		JButton btnCholestrolLevel = new JButton("Cholestrol Level");
@@ -91,7 +91,7 @@ public class PatientListView implements Observer{
 				cholestrolView.cholestrolScreen();
 			}
 		});
-		btnCholestrolLevel.setBounds(138, 172, 152, 23);
+		btnCholestrolLevel.setBounds(374, 362, 152, 23);
 		frame.getContentPane().add(btnCholestrolLevel);
 		this.frame.setVisible(true);
 	}

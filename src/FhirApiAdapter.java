@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 
+import org.hl7.fhir.r4.model.Encounter;
 import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Patient;
 
@@ -21,9 +22,13 @@ public class FhirApiAdapter extends FhirServer {
 	}
 
 	@Override
-	public ArrayList<Patient> getAllPractitionerPatients(String practitionerID) {
+	public ArrayList<Patient> getAllPractitionerPatients(String practitionerId) {
 		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Patient> patientArray = new ArrayList<Patient>();
+		Patient patient = client.read().resource(Patient.class).withId(practitionerId).execute();
+		patientArray.add(patient);
+		
+		return patientArray;
 	}
 
 	@Override
@@ -31,5 +36,5 @@ public class FhirApiAdapter extends FhirServer {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 }
