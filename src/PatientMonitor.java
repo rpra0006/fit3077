@@ -1,12 +1,19 @@
 import java.util.*;
 
+import org.hl7.fhir.r4.model.Patient;
+
 public class PatientMonitor implements Subject {
-	private Practitioner practitioner;
 	private int secondsToUpdate = 10;
+	private String pracId;
 	private ArrayList<Observer> observers = new ArrayList<Observer>();
+	private FhirServer server = new FhirApiAdapter();
 	
-	public PatientMonitor(Practitioner practitioner) {
-		this.practitioner = practitioner;
+	public PatientMonitor(String pracId) {
+		this.pracId = pracId;
+	}
+	
+	public ArrayList<Patient> getPatientList(){
+		return server.getAllPractitionerPatients(this.pracId);
 	}
 	
 	@Override
