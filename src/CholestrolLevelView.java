@@ -31,11 +31,12 @@ public class CholestrolLevelView {
 	/**
 	 * Launch the application.
 	 */
-	public static void cholestrolScreen() {
+	public void cholestrolScreen() {
+		CholestrolLevelView window = this;
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					CholestrolLevelView window = new CholestrolLevelView();
+					//CholestrolLevelView window = new CholestrolLevelView();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -125,13 +126,18 @@ public class CholestrolLevelView {
 		frame.getContentPane().add(btnRemovePatient);
 		
 		txtSetTimerInterval = new JTextField();
-		txtSetTimerInterval.setText("Enter number of seconds");
-		txtSetTimerInterval.setBounds(528, 223, 135, 33);
+		txtSetTimerInterval.setBounds(528, 223, 124, 23);
 		frame.getContentPane().add(txtSetTimerInterval);
 		txtSetTimerInterval.setColumns(10);
 		
 		JButton btnSetTimer = new JButton("Set Timer");
-		btnSetTimer.setBounds(551, 267, 89, 23);
+		btnSetTimer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// Change timer interval to update data
+				// int second = txtSetTimerInterval.getText();
+			}
+		});
+		btnSetTimer.setBounds(528, 257, 124, 23);
 		frame.getContentPane().add(btnSetTimer);
 	}
 	
@@ -139,7 +145,6 @@ public class CholestrolLevelView {
 		//Get patient data and update table
 		String[] row = new String[3];
 		row[0] = patientData[1];
-		System.out.println(row[0]);
 		model.addRow(row);
 	}
 	
