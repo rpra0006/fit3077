@@ -6,12 +6,15 @@ public class Driver {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		FhirServer server = new FhirApiAdapter();
-		ArrayList<Patient> patients = server.getAllPractitionerPatients("500");
-		for(Patient p: patients) {
-			System.out.println(p.getName().get(0).getNameAsSingleString());
-		}
-		
+		//FhirServer server = new FhirApiAdapter();
+		//ArrayList<Patient> patients = server.getAllPractitionerPatients("500");
+		//for(Patient p: patients) {
+		//	System.out.println(p.getName().get(0).getNameAsSingleString());
+		//}
+		PatientMonitor monitor = new PatientMonitor("400");
+		monitor.initialize();
+		monitor.setUpdateTime(3);
+		View view = new View(monitor);
 	}
 	
 }

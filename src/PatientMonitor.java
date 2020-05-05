@@ -48,4 +48,6 @@ public class PatientMonitor implements Subject {
 	public void setUpdateTime(int updateTime) {
 		this.secondsToUpdate = updateTime;
 	}
+	
+	//add patient to monitor connect with CholestrolLevelView
 }

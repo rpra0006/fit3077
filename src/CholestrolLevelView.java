@@ -19,12 +19,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
-public class CholestrolLevelView {
+public class CholestrolLevelView implements Observer {
 
 	private JFrame frame;
 	private JTable table;
 	private JTextField patientNameField;
-	private ArrayList<Patient> patientMonitor = new ArrayList<Patient>();
+	private PatientMonitor patientMonitor = new PatientMonitor("400");
 	private DefaultTableModel model;
 	private JTextField txtSetTimerInterval;
 	
@@ -95,20 +95,9 @@ public class CholestrolLevelView {
 		
 		
 		patientNameField = new JTextField();
-		patientNameField.setBounds(528, 105, 124, 23);
+		patientNameField.setBounds(516, 139, 160, 23);
 		frame.getContentPane().add(patientNameField);
 		patientNameField.setColumns(10);
-		
-		JButton btnAddPatient = new JButton("Add Patient");
-		btnAddPatient.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String[] row = new String[3];
-				row[0] = patientNameField.getText();
-				model.addRow(row);
-			}
-		});
-		btnAddPatient.setBounds(528, 139, 124, 23);
-		frame.getContentPane().add(btnAddPatient);
 		
 		JButton btnRemovePatient = new JButton("Remove Patient");
 		btnRemovePatient.addActionListener(new ActionListener() {
@@ -122,11 +111,11 @@ public class CholestrolLevelView {
 				}
 			}
 		});
-		btnRemovePatient.setBounds(528, 173, 124, 23);
+		btnRemovePatient.setBounds(538, 174, 124, 23);
 		frame.getContentPane().add(btnRemovePatient);
 		
 		txtSetTimerInterval = new JTextField();
-		txtSetTimerInterval.setBounds(528, 223, 124, 23);
+		txtSetTimerInterval.setBounds(516, 223, 160, 23);
 		frame.getContentPane().add(txtSetTimerInterval);
 		txtSetTimerInterval.setColumns(10);
 		
@@ -135,9 +124,10 @@ public class CholestrolLevelView {
 			public void actionPerformed(ActionEvent e) {
 				// Change timer interval to update data
 				// int second = txtSetTimerInterval.getText();
+				// updatePatientDataTimer(second);
 			}
 		});
-		btnSetTimer.setBounds(528, 257, 124, 23);
+		btnSetTimer.setBounds(538, 257, 124, 23);
 		frame.getContentPane().add(btnSetTimer);
 	}
 	
@@ -146,9 +136,17 @@ public class CholestrolLevelView {
 		String[] row = new String[3];
 		row[0] = patientData[1];
 		model.addRow(row);
+		//patientMonitor.addPatient(patientData[0]); Add to patientMonitor list
 	}
 	
-	private void updatePatientData(int timer) {
-		//Update list every n second
+	private void setPatientDataTimer(int timer) {
+		//patientMonitor.setUpdateTime(timer);
+	}
+	
+	public void update() {
+		//list update
+		// for (patient : table){
+		//    setRow1 = patient
+		
 	}
 }
