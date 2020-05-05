@@ -27,28 +27,19 @@ public class FhirApiAdapter extends FhirServer {
 	@Override
 	public ArrayList<Patient> getAllPractitionerPatients(String practitionerID) {
 		// TODO Auto-generated method stub
-
+		final String ENCOUNTER_SEARCH_URL = "Encounter?participant.identifier=http://hl7.org/fhir/sid/us-npi|" + practitionerID;
 		ArrayList<Patient> patientList = new ArrayList<Patient>();
 		
+		Bundle allEncounters = client.search().byUrl(BASE_URL + ENCOUNTER_SEARCH_URL).returnBundle(Bundle.class).execute();
 		
-		Bundle encounters = client.search()
-				.forResource(Encounter.class)
-				.where(Encounter.PRACTITIONER.hasId(practitionerID))
-				.returnBundle(Bundle.class).execute();
-		
-		System.out.println(parser.encodeResourceToString(encounters));
-		
-		for(BundleEntryComponent entry: encounters.getEntry()) {
+		for(BundleEntryComponent entry: allEncounters.getEntry()) {
 			Encounter encounter = (Encounter) entry.getResource();
 			String patientURL = encounter.getSubject().getReference();
-			System.out.println(patientURL);
 			
 			Patient patient = client.read().resource(Patient.class).withUrl(BASE_URL + patientURL).execute();
 			patientList.add(patient);
 		}
-		
-		//REMOVE DUPLICATES
-		return patientList;
+		return patientList; //contains duplicates 
 	}
 
 	@Override
