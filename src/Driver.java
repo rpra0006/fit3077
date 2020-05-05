@@ -11,8 +11,7 @@ public class Driver {
 		//for(Patient p: patients) {
 		//	System.out.println(p.getName().get(0).getNameAsSingleString());
 		//}
-		PatientMonitor monitor = new PatientMonitor("400");
-		monitor.initialize();
+		PatientMonitor monitor = new PatientMonitor();
 		monitor.setUpdateTime(3);
 		View view = new View(monitor);
 	}

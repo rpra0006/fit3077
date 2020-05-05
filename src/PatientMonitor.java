@@ -4,40 +4,35 @@ import org.hl7.fhir.r4.model.Patient;
 
 public class PatientMonitor implements Subject {
 	private int secondsToUpdate = 10;
-	private String pracId;
 	private ArrayList<Observer> observers = new ArrayList<Observer>();
+	private ArrayList<Patient> patients = new ArrayList<Patient>();
 	private FhirServer server = new FhirApiAdapter();
+	private Timer timer;
 	
-	public PatientMonitor(String pracId) {
-		this.pracId = pracId;
-	}
-	
-	public ArrayList<Patient> getPatientList(){
-		return server.getAllPractitionerPatients(this.pracId);
+	public PatientMonitor() {
+		this.startNotification();
 	}
 	
 	@Override
 	public void attach(Observer o) {
-		// TODO Auto-generated method stub
 		observers.add(o);
 	}
 
 	@Override
 	public void detach(Observer o) {
-		// TODO Auto-generated method stub
 		observers.remove(o);
 	}
 
 	@Override
 	public void notifyObservers() {
-		// TODO Auto-generated method stub
 		for(Observer o: observers) {
 			o.update();
 		}
 	}
 	
-	public void initialize() {
-		new Timer().scheduleAtFixedRate(new TimerTask() {
+	private void startNotification() {
+		timer = new Timer();
+		timer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
 				notifyObservers();
@@ -47,7 +42,13 @@ public class PatientMonitor implements Subject {
 	
 	public void setUpdateTime(int updateTime) {
 		this.secondsToUpdate = updateTime;
+		timer.cancel();
+		this.startNotification();
 	}
 	
-	//add patient to monitor connect with CholestrolLevelView
+	//add patient to monitor to connect with CholestrolLevelView
+	public void addPatient(Patient p) {
+		this.patients.add(p);
+	}
+	
 }

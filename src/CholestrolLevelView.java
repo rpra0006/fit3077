@@ -24,7 +24,7 @@ public class CholestrolLevelView implements Observer {
 	private JFrame frame;
 	private JTable table;
 	private JTextField patientNameField;
-	private PatientMonitor patientMonitor = new PatientMonitor("400");
+	private PatientMonitor patientMonitor = new PatientMonitor();
 	private DefaultTableModel model;
 	private JTextField txtSetTimerInterval;
 	
