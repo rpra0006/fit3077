@@ -17,16 +17,15 @@ public class FhirApiAdapter extends FhirServer {
 	private IGenericClient client = ctx.newRestfulGenericClient(BASE_URL);
 	
 	@Override
-	public Patient getPatient(String patientID) {
-		// TODO Auto-generated method stub
-		Patient patient = client.read().resource(Patient.class).withId(patientID).execute();
-		System.out.println(parser.encodeResourceToString(patient));
-		return null;
+	public Patient getPatient(String patientIdentifier) {
+		final String PATIENT_SEARCH_URL = "Patient?identifier=https://github.com/synthetichealth/synthea|" + patientIdentifier;
+		Bundle patientBundle = client.search().byUrl(BASE_URL + PATIENT_SEARCH_URL).returnBundle(Bundle.class).execute();
+		Patient patient = (Patient) patientBundle.getEntry().get(0).getResource();
+		return patient;
 	}
 
 	@Override
 	public ArrayList<Patient> getAllPractitionerPatients(String practitionerID) {
-		// TODO Auto-generated method stub
 		final String ENCOUNTER_SEARCH_URL = "Encounter?participant.identifier=http://hl7.org/fhir/sid/us-npi|" + practitionerID;
 		ArrayList<Patient> patientList = new ArrayList<Patient>();
 		
@@ -43,9 +42,18 @@ public class FhirApiAdapter extends FhirServer {
 	}
 
 	@Override
-	public Observation getPatientLatestObservation(String patientID, String observationCode) {
-		// TODO Auto-generated method stub
-		return null;
+	public Observation getPatientLatestObservation(String patientIdentifier, String observationCode) {
+		final String OBSERVATION_SEARCH_URL = "Observation?patient.identifier=https://github.com/synthetichealth/synthea|" + patientIdentifier + 
+				"&code=" + observationCode + "&_sort=-date"; // sort in descending order based on date
+		
+		Bundle allObservations = client.search().byUrl(BASE_URL + OBSERVATION_SEARCH_URL)
+				.returnBundle(Bundle.class)
+				.execute();
+		
+		// since bundle is sorted in descending order based on date,
+		// first item in entry has to be latest observation
+		Observation latestObservation = (Observation) allObservations.getEntry().get(0).getResource();
+		return latestObservation;
 	}
 	
 }
