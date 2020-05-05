@@ -8,18 +8,25 @@ import javax.swing.JList;
 import javax.swing.AbstractListModel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import org.hl7.fhir.r4.model.Patient;
+
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 public class CholestrolLevelView {
 
 	private JFrame frame;
 	private JTable table;
 	private JTextField patientNameField;
+	private ArrayList<Patient> patientMonitor = new ArrayList<Patient>();
+	private DefaultTableModel model;
+	private JTextField txtSetTimerInterval;
 	
 	/**
 	 * Launch the application.
@@ -49,7 +56,7 @@ public class CholestrolLevelView {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
+		frame.setBounds(100, 100, 712, 492);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -58,7 +65,7 @@ public class CholestrolLevelView {
 		frame.getContentPane().add(lblCholestrolLevels);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 40, 242, 196);
+		scrollPane.setBounds(10, 36, 470, 408);
 		frame.getContentPane().add(scrollPane);
 		
 		table = new JTable();
@@ -71,7 +78,7 @@ public class CholestrolLevelView {
 		));
 		
 		Object[] columns = {"Name", "Cholestrol Level", "Date Issued"};
-		DefaultTableModel model = new DefaultTableModel();
+		model = new DefaultTableModel();
 		model.setColumnIdentifiers(columns);
 		table.setModel(model);
 		table.addMouseListener(new MouseAdapter() {
@@ -87,7 +94,7 @@ public class CholestrolLevelView {
 		
 		
 		patientNameField = new JTextField();
-		patientNameField.setBounds(287, 61, 124, 23);
+		patientNameField.setBounds(528, 105, 124, 23);
 		frame.getContentPane().add(patientNameField);
 		patientNameField.setColumns(10);
 		
@@ -99,7 +106,7 @@ public class CholestrolLevelView {
 				model.addRow(row);
 			}
 		});
-		btnAddPatient.setBounds(287, 92, 124, 23);
+		btnAddPatient.setBounds(528, 139, 124, 23);
 		frame.getContentPane().add(btnAddPatient);
 		
 		JButton btnRemovePatient = new JButton("Remove Patient");
@@ -114,7 +121,29 @@ public class CholestrolLevelView {
 				}
 			}
 		});
-		btnRemovePatient.setBounds(287, 119, 124, 23);
+		btnRemovePatient.setBounds(528, 173, 124, 23);
 		frame.getContentPane().add(btnRemovePatient);
+		
+		txtSetTimerInterval = new JTextField();
+		txtSetTimerInterval.setText("Enter number of seconds");
+		txtSetTimerInterval.setBounds(528, 223, 135, 33);
+		frame.getContentPane().add(txtSetTimerInterval);
+		txtSetTimerInterval.setColumns(10);
+		
+		JButton btnSetTimer = new JButton("Set Timer");
+		btnSetTimer.setBounds(551, 267, 89, 23);
+		frame.getContentPane().add(btnSetTimer);
+	}
+	
+	public void addPatientToMonitor(String[] patientData) {
+		//Get patient data and update table
+		String[] row = new String[3];
+		row[0] = patientData[1];
+		System.out.println(row[0]);
+		model.addRow(row);
+	}
+	
+	private void updatePatientData(int timer) {
+		//Update list every n second
 	}
 }
