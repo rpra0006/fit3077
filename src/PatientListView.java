@@ -6,6 +6,7 @@ import java.awt.BorderLayout;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import org.hl7.fhir.r4.model.Patient;
 
@@ -20,6 +21,7 @@ public class PatientListView implements Observer{
 	private JTable table;
 	private String pracId;
 	private FhirServer server = new FhirApiAdapter();
+	private CholestrolLevelView cholestrolView = new CholestrolLevelView();
 	
 	/**
 	 * Create the application.
@@ -78,21 +80,32 @@ public class PatientListView implements Observer{
 			model.addRow(row);
 		}
 		
-		
-		//
 		JLabel lblPatientMonitor = new JLabel("Patient Monitor");
-		lblPatientMonitor.setBounds(413, 337, 99, 14);
+		lblPatientMonitor.setBounds(409, 337, 99, 14);
 		frame.getContentPane().add(lblPatientMonitor);
 		
 		JButton btnCholestrolLevel = new JButton("Cholestrol Level");
 		btnCholestrolLevel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				CholestrolLevelView cholestrolView = new CholestrolLevelView();
 				cholestrolView.cholestrolScreen();
 			}
 		});
-		btnCholestrolLevel.setBounds(374, 362, 152, 23);
+		btnCholestrolLevel.setBounds(361, 392, 167, 23);
 		frame.getContentPane().add(btnCholestrolLevel);
+		
+		JButton btnAddPatient = new JButton("Add Patient");
+		btnAddPatient.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String[] patientData = new String[2];
+				int row = table.getSelectedRow();
+				patientData[0] = (String) table.getModel().getValueAt(row, 0);
+				patientData[1] = (String) table.getModel().getValueAt(row, 1);
+				cholestrolView.addPatientToMonitor(patientData);
+			}
+		});
+		btnAddPatient.setBounds(361, 362, 167, 23);
+		frame.getContentPane().add(btnAddPatient);
+		
 		this.frame.setVisible(true);
 	}
 
