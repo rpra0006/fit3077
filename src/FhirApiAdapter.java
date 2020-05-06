@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
@@ -63,11 +64,27 @@ public class FhirApiAdapter extends FhirServer {
 			
 			hasNextPage = this.hasNextLink(allEncounters);
 			if(hasNextPage) {
-				nextURL = allEncounters.getLink(allEncounters.LINK_NEXT).getUrl();
+				nextURL = allEncounters.getLink(Bundle.LINK_NEXT).getUrl();
 			}
 		}
 	
-		return patientList; //contains duplicates 
+		return removeDuplicates(patientList); //contains duplicates 
+	}
+	
+	private ArrayList<Patient> removeDuplicates(ArrayList<Patient> patientList) {
+		ArrayList<Patient> noDuplicatesList = new ArrayList<Patient>();
+		HashSet<String> availableIdentifiers = new HashSet<String>();
+		
+		for(int i = 0; i < patientList.size(); i++) {
+			Patient patient = patientList.get(i);
+			String patientIdentifier = patient.getIdentifier().get(0).getValue();
+			
+			if(!availableIdentifiers.contains(patientIdentifier)) {
+				availableIdentifiers.add(patientIdentifier);
+				noDuplicatesList.add(patient);
+			}
+		}
+		return noDuplicatesList;
 	}
 
 	@Override
@@ -86,7 +103,7 @@ public class FhirApiAdapter extends FhirServer {
 	}
 	
 	private Boolean hasNextLink(Bundle bundle) {
-		if(bundle.getLink(bundle.LINK_NEXT) == null) {
+		if(bundle.getLink(Bundle.LINK_NEXT) == null) {
 			return false;
 		}
 		return true;
