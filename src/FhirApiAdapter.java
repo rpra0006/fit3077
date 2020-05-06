@@ -9,12 +9,22 @@ import org.hl7.fhir.r4.model.Patient;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.*;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.rest.client.exceptions.FhirClientConnectionException;
 
 public class FhirApiAdapter extends FhirServer {
 	private final String BASE_URL = "https://fhir.monash.edu/hapi-fhir-jpaserver/fhir/";
 	private FhirContext ctx = FhirContext.forR4();
 	private IParser parser = ctx.newJsonParser().setPrettyPrint(true);
-	private IGenericClient client = ctx.newRestfulGenericClient(BASE_URL);
+	private IGenericClient client;
+	
+	public FhirApiAdapter() {
+		// change socket timeout values
+		final int MAX_SOCKET_TIMEOUT = 60;
+		final int S_TO_MS = 1000;
+		
+		ctx.getRestfulClientFactory().setSocketTimeout(MAX_SOCKET_TIMEOUT * S_TO_MS);
+		client = ctx.newRestfulGenericClient(BASE_URL);
+	}
 	
 	@Override
 	public Patient getPatient(String patientIdentifier) {
@@ -29,15 +39,34 @@ public class FhirApiAdapter extends FhirServer {
 		final String ENCOUNTER_SEARCH_URL = "Encounter?participant.identifier=http://hl7.org/fhir/sid/us-npi|" + practitionerID;
 		ArrayList<Patient> patientList = new ArrayList<Patient>();
 		
-		Bundle allEncounters = client.search().byUrl(BASE_URL + ENCOUNTER_SEARCH_URL).returnBundle(Bundle.class).execute();
+		Boolean hasNextPage = true;
+		String nextURL = BASE_URL + ENCOUNTER_SEARCH_URL;
 		
-		for(BundleEntryComponent entry: allEncounters.getEntry()) {
-			Encounter encounter = (Encounter) entry.getResource();
-			String patientURL = encounter.getSubject().getReference();
+		while(hasNextPage) {
+			Bundle allEncounters;
+			try {
+				allEncounters = client.search().byUrl(nextURL).returnBundle(Bundle.class).execute();
+			}
+			catch(FhirClientConnectionException fe) {
+				System.out.println(fe);
+				System.out.println("Connection failed. Please restart");
+				break;
+			}
 			
-			Patient patient = client.read().resource(Patient.class).withUrl(BASE_URL + patientURL).execute();
-			patientList.add(patient);
+			for(BundleEntryComponent entry: allEncounters.getEntry()) {
+				Encounter encounter = (Encounter) entry.getResource();
+				String patientURL = encounter.getSubject().getReference();
+				
+				Patient patient = client.read().resource(Patient.class).withUrl(BASE_URL + patientURL).execute();
+				patientList.add(patient);
+			}
+			
+			hasNextPage = this.hasNextLink(allEncounters);
+			if(hasNextPage) {
+				nextURL = allEncounters.getLink(allEncounters.LINK_NEXT).getUrl();
+			}
 		}
+	
 		return patientList; //contains duplicates 
 	}
 
@@ -54,6 +83,13 @@ public class FhirApiAdapter extends FhirServer {
 		// first item in entry has to be latest observation
 		Observation latestObservation = (Observation) allObservations.getEntry().get(0).getResource();
 		return latestObservation;
+	}
+	
+	private Boolean hasNextLink(Bundle bundle) {
+		if(bundle.getLink(bundle.LINK_NEXT) == null) {
+			return false;
+		}
+		return true;
 	}
 	
 }
