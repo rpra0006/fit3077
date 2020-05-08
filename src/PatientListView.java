@@ -96,11 +96,9 @@ public class PatientListView implements Observer{
 		JButton btnAddPatient = new JButton("Add Patient");
 		btnAddPatient.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String[] patientData = new String[2];
 				int row = table.getSelectedRow();
-				patientData[0] = (String) table.getModel().getValueAt(row, 0);
-				patientData[1] = (String) table.getModel().getValueAt(row, 1);
-				cholestrolView.addPatientToMonitor(patientData);
+				cholestrolView.addPatientToMonitor(allPatients.get(row));
+				System.out.println(allPatients.get(row));
 			}
 		});
 		btnAddPatient.setBounds(361, 362, 167, 23);

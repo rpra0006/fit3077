@@ -11,13 +11,13 @@ public class Driver {
 	public static void main(String[] args) {
 		FhirServer server = new FhirApiAdapter();
 		IParser parser = FhirContext.forR4().newJsonParser().setPrettyPrint(true);
-		
-		ArrayList<Patient> patients = server.getAllPractitionerPatients("400");
+
+		//ArrayList<Patient> patients = server.getAllPractitionerPatients("500");
+		/*
 		for(Patient p: patients) {
 			System.out.println(p.getName().get(0).getNameAsSingleString());
 		}
-		System.out.println(patients.size());
-		
+		*/
 		/*
 		PatientMonitor monitor = new PatientMonitor();
 		monitor.setUpdateTime(3);
