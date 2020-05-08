@@ -157,18 +157,25 @@ public class CholestrolLevelView implements Observer {
 	public void update() {
 		//list update
 		System.out.println("updated");
-		//model.setRowCount(0);
+		model.setRowCount(0);
 		
 		for (Map.Entry<String, Observation> patientObservation : patientMonitor.getAllObservation().entrySet()){
 			String[] row = new String[3];
 			row[0] = patientObservation.getKey();
 			
 			Observation observation = patientObservation.getValue();
-			String cholestrolLevel = observation.getValueQuantity().getValue() + observation.getValueQuantity().getUnit();
-			row[1] = cholestrolLevel;
+			String cholestrolLevel;
+			String dateIssued;
 			
-			String dateIssued = observation.getIssued().toString();
-			row[2] = dateIssued;
+			if(observation == null) {
+				cholestrolLevel = "No data";
+			}
+			else{
+				cholestrolLevel = observation.getValueQuantity().getValue() + observation.getValueQuantity().getUnit();
+				dateIssued = observation.getIssued().toString();
+				row[2] = dateIssued;
+			}
+			row[1] = cholestrolLevel;
 			
 			model.addRow(row);
 		}

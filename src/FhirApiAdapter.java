@@ -96,6 +96,10 @@ public class FhirApiAdapter extends FhirServer {
 				.returnBundle(Bundle.class)
 				.execute();
 		
+		if(allObservations.getEntry().size() == 0) {
+			return null;
+		}
+		
 		// since bundle is sorted in descending order based on date,
 		// first item in entry has to be latest observation
 		Observation latestObservation = (Observation) allObservations.getEntry().get(0).getResource();
