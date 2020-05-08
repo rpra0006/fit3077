@@ -12,10 +12,12 @@ public class Driver {
 		FhirServer server = new FhirApiAdapter();
 		IParser parser = FhirContext.forR4().newJsonParser().setPrettyPrint(true);
 		
-		ArrayList<Patient> patients = server.getAllPractitionerPatients("500");
+		ArrayList<Patient> patients = server.getAllPractitionerPatients("400");
 		for(Patient p: patients) {
 			System.out.println(p.getName().get(0).getNameAsSingleString());
 		}
+		System.out.println(patients.size());
+		
 		/*
 		PatientMonitor monitor = new PatientMonitor();
 		monitor.setUpdateTime(3);
@@ -24,6 +26,7 @@ public class Driver {
 		
 		//Observation o = server.getPatientLatestObservation("68b568d4-eed6-4610-acfb-4e05c7399429", "2093-3");
 		//System.out.println(parser.encodeResourceToString(o));
+		//System.out.println(o.getValueQuantity().getValue() + o.getValueQuantity().getUnit());
 	}
-	
+
 }
