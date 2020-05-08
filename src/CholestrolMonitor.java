@@ -5,6 +5,7 @@ import java.util.Map;
 import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Patient;
 
+// Get all observation of patient
 public class CholestrolMonitor extends PatientMonitor {
 	private final String CHOLESTROL_CODE = "2093-3";
 	private FhirServer server = new FhirApiAdapter();
