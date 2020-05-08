@@ -1,12 +1,12 @@
 import java.util.*;
 
+import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Patient;
 
-public class PatientMonitor implements Subject {
+public abstract class PatientMonitor implements Subject {
 	private int secondsToUpdate = 10;
 	private ArrayList<Observer> observers = new ArrayList<Observer>();
 	private ArrayList<Patient> patients = new ArrayList<Patient>();
-	private FhirServer server = new FhirApiAdapter();
 	private Timer timer;
 	
 	public PatientMonitor() {
@@ -51,4 +51,13 @@ public class PatientMonitor implements Subject {
 		this.patients.add(p);
 	}
 	
+	public void removePatient(int patientIndex) {
+		this.patients.remove(patientIndex);
+	}
+	
+	public ArrayList<Patient> getAllPatients(){
+		return this.patients;
+	}
+	
+	public abstract Map<String,Observation> getAllObservation();
 }

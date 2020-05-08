@@ -9,6 +9,7 @@ import javax.swing.AbstractListModel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Patient;
 
 import javax.swing.JTextField;
@@ -18,13 +19,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CholestrolLevelView implements Observer {
 
 	private JFrame frame;
 	private JTable table;
 	private JTextField patientNameField;
-	private PatientMonitor patientMonitor = new PatientMonitor();
+	private PatientMonitor patientMonitor = new CholestrolMonitor();
 	private DefaultTableModel model;
 	private JTextField txtSetTimerInterval;
 	
@@ -105,6 +108,7 @@ public class CholestrolLevelView implements Observer {
 				int i = table.getSelectedRow();
 				if (i >= 0) {
 					model.removeRow(i);
+					patientMonitor.removePatient(i);
 				}
 				else {
 					System.out.println("Delete Error");
@@ -123,30 +127,51 @@ public class CholestrolLevelView implements Observer {
 		btnSetTimer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Change timer interval to update data
-				// int second = txtSetTimerInterval.getText();
-				// updatePatientDataTimer(second);
+				int second = Integer.parseInt(txtSetTimerInterval.getText());
+				setPatientDataTimer(second);
 			}
 		});
 		btnSetTimer.setBounds(538, 257, 124, 23);
 		frame.getContentPane().add(btnSetTimer);
+		
+		this.patientMonitor.attach(this);
 	}
 	
-	public void addPatientToMonitor(String[] patientData) {
+	public void addPatientToMonitor(Patient patientData) {
 		//Get patient data and update table
-		String[] row = new String[3];
-		row[0] = patientData[1];
-		model.addRow(row);
-		//patientMonitor.addPatient(patientData[0]); Add to patientMonitor list
+		//String patientId = patientData.getIdentifier().get(0).getValue();
+		//String patientName = patientData.getName().get(0).getNameAsSingleString();
+		
+		// get cholestrol level and date for the first time
+		//String[] row = new String[3];
+		//row[0] = patientName;
+		
+		//model.addRow(row);
+		patientMonitor.addPatient(patientData); //Add to patientMonitor list
 	}
 	
 	private void setPatientDataTimer(int timer) {
-		//patientMonitor.setUpdateTime(timer);
+		patientMonitor.setUpdateTime(timer);
 	}
 	
 	public void update() {
 		//list update
-		// for (patient : table){
-		//    setRow1 = patient
+		System.out.println("updated");
+		//model.setRowCount(0);
+		
+		for (Map.Entry<String, Observation> patientObservation : patientMonitor.getAllObservation().entrySet()){
+			String[] row = new String[3];
+			row[0] = patientObservation.getKey();
+			
+			Observation observation = patientObservation.getValue();
+			String cholestrolLevel = observation.getValueQuantity().getValue() + observation.getValueQuantity().getUnit();
+			row[1] = cholestrolLevel;
+			
+			String dateIssued = observation.getIssued().toString();
+			row[2] = dateIssued;
+			
+			model.addRow(row);
+		}
 		
 	}
 }
