@@ -98,7 +98,6 @@ public class PatientListView implements Observer{
 			public void actionPerformed(ActionEvent e) {
 				int row = table.getSelectedRow();
 				cholestrolView.addPatientToMonitor(allPatients.get(row));
-				System.out.println(allPatients.get(row));
 			}
 		});
 		btnAddPatient.setBounds(361, 362, 167, 23);

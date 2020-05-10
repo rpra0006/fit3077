@@ -51,13 +51,18 @@ public abstract class PatientMonitor implements Subject {
 		this.patients.add(p);
 	}
 	
-	public void removePatient(int patientIndex) {
-		this.patients.remove(patientIndex);
+	public void removePatientByName(String name) {
+		for(Patient p: this.patients) {
+			if(p.getName().get(0).getNameAsSingleString().compareTo(name) == 0) {
+				this.patients.remove(p);
+				return;
+			}
+		}
 	}
 	
 	public ArrayList<Patient> getAllPatients(){
 		return this.patients;
 	}
 	
-	public abstract Map<String,Observation> getAllObservation();
+	public abstract Map<Patient, Observation> getAllObservation();
 }

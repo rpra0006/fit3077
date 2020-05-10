@@ -2,10 +2,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import java.awt.BorderLayout;
 import javax.swing.JScrollPane;
-import javax.swing.JList;
-import javax.swing.AbstractListModel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -18,8 +15,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 public class CholestrolLevelView implements Observer {
@@ -106,9 +101,12 @@ public class CholestrolLevelView implements Observer {
 		btnRemovePatient.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int i = table.getSelectedRow();
+				String patientName = model.getValueAt(i, 0).toString();
+				
 				if (i >= 0) {
 					model.removeRow(i);
-					patientMonitor.removePatient(i);
+					patientMonitor.removePatientByName(patientName);
+					update();
 				}
 				else {
 					System.out.println("Delete Error");
@@ -138,16 +136,8 @@ public class CholestrolLevelView implements Observer {
 	}
 	
 	public void addPatientToMonitor(Patient patientData) {
-		//Get patient data and update table
-		//String patientId = patientData.getIdentifier().get(0).getValue();
-		//String patientName = patientData.getName().get(0).getNameAsSingleString();
-		
-		// get cholestrol level and date for the first time
-		//String[] row = new String[3];
-		//row[0] = patientName;
-		
-		//model.addRow(row);
 		patientMonitor.addPatient(patientData); //Add to patientMonitor list
+		update();
 	}
 	
 	private void setPatientDataTimer(int timer) {
@@ -156,14 +146,14 @@ public class CholestrolLevelView implements Observer {
 	
 	public void update() {
 		//list update
-		System.out.println("updated");
 		model.setRowCount(0);
 		
-		for (Map.Entry<String, Observation> patientObservation : patientMonitor.getAllObservation().entrySet()){
+		for (Map.Entry<Patient, Observation> patientObservation : patientMonitor.getAllObservation().entrySet()){
 			String[] row = new String[3];
-			row[0] = patientObservation.getKey();
 			
+			Patient patient = patientObservation.getKey();
 			Observation observation = patientObservation.getValue();
+			
 			String cholestrolLevel;
 			String dateIssued;
 			
@@ -176,6 +166,7 @@ public class CholestrolLevelView implements Observer {
 				row[2] = dateIssued;
 			}
 			row[1] = cholestrolLevel;
+			row[0] = patient.getName().get(0).getNameAsSingleString();
 			
 			model.addRow(row);
 		}
