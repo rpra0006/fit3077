@@ -1,9 +1,12 @@
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import org.hl7.fhir.r4.model.Observation;
@@ -25,6 +28,40 @@ public class CholestrolLevelView implements Observer {
 	private PatientMonitor patientMonitor = new CholestrolMonitor();
 	private DefaultTableModel model;
 	private JTextField txtSetTimerInterval;
+	
+	class CholesterolCellRenderer extends DefaultTableCellRenderer {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		float averageChol;
+		
+		public CholesterolCellRenderer(float averageChol) {
+			this.averageChol = averageChol;
+		}
+		
+		@Override
+		public Component getTableCellRendererComponent(JTable table,Object value,boolean isSelected,boolean hasFocus,int row,int column) {
+			Component c = super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
+			final String nullString = "No data";
+			String cholesterolData = (String) value;
+			
+			// return if patient does not have cholesterol
+			if(cholesterolData != nullString) {
+				String[] cholesterolComponents = cholesterolData.split(" ");
+				float cholesterolValue = Float.parseFloat(cholesterolComponents[0]);
+				
+				if(cholesterolValue > averageChol) {
+					c.setForeground(Color.RED);
+				}
+				else {
+					c.setForeground(null);
+				}
+			}
+			
+			return c;
+		}
+	}
 	
 	/**
 	 * Launch the application.
@@ -91,7 +128,6 @@ public class CholestrolLevelView implements Observer {
 		table.getColumnModel().getColumn(1).setPreferredWidth(93);
 		scrollPane.setViewportView(table);
 		
-		
 		patientNameField = new JTextField();
 		patientNameField.setBounds(516, 139, 160, 23);
 		frame.getContentPane().add(patientNameField);
@@ -147,6 +183,8 @@ public class CholestrolLevelView implements Observer {
 	public void update() {
 		//list update
 		model.setRowCount(0);
+		float totalCholesterol = 0;
+		int patientCholCount = 0;
 		
 		for (Map.Entry<Patient, Observation> patientObservation : patientMonitor.getAllObservation().entrySet()){
 			String[] row = new String[3];
@@ -161,7 +199,11 @@ public class CholestrolLevelView implements Observer {
 				cholestrolLevel = "No data";
 			}
 			else{
-				cholestrolLevel = observation.getValueQuantity().getValue() + observation.getValueQuantity().getUnit();
+				// update cholesterol and count for average
+				totalCholesterol += observation.getValueQuantity().getValue().floatValue();
+				patientCholCount += 1;
+				
+				cholestrolLevel = observation.getValueQuantity().getValue() + " " +  observation.getValueQuantity().getUnit();
 				dateIssued = observation.getIssued().toString();
 				row[2] = dateIssued;
 			}
@@ -171,5 +213,11 @@ public class CholestrolLevelView implements Observer {
 			model.addRow(row);
 		}
 		
+		float averageCholesterol = totalCholesterol / patientCholCount;
+		setAverageHighlighting(averageCholesterol);
+	}
+	
+	private void setAverageHighlighting(float averageCholesterol) {
+		this.table.getColumnModel().getColumn(1).setCellRenderer(new CholesterolCellRenderer(averageCholesterol));
 	}
 }
