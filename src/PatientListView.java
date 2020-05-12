@@ -15,13 +15,13 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
-public class PatientListView{
+public class PatientListView {
 
 	private JFrame frame;
 	private JTable table;
 	private String pracId;
 	private FhirServer server = new FhirApiAdapter();
-	private CholestrolLevelView cholestrolView = new CholestrolLevelView();
+	private MonitorView observationView;
 	
 	/**
 	 * Create the application.
@@ -87,7 +87,8 @@ public class PatientListView{
 		JButton btnCholestrolLevel = new JButton("Cholestrol Level");
 		btnCholestrolLevel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				cholestrolView.cholestrolScreen();
+				observationView = new CholestrolLevelView();
+				observationView.launchScreen();
 			}
 		});
 		btnCholestrolLevel.setBounds(361, 392, 167, 23);
@@ -97,7 +98,9 @@ public class PatientListView{
 		btnAddPatient.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int row = table.getSelectedRow();
-				cholestrolView.addPatientToMonitor(allPatients.get(row));
+				if(observationView != null) {
+					observationView.addPatientToMonitor(allPatients.get(row));
+				}
 			}
 		});
 		btnAddPatient.setBounds(361, 362, 167, 23);

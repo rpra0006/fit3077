@@ -20,7 +20,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Map;
 
-public class CholestrolLevelView implements Observer {
+public class CholestrolLevelView extends MonitorView {
 
 	private JFrame frame;
 	private JTable table;
@@ -66,7 +66,7 @@ public class CholestrolLevelView implements Observer {
 	/**
 	 * Launch the application.
 	 */
-	public void cholestrolScreen() {
+	public void launchScreen() {
 		CholestrolLevelView window = this;
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
