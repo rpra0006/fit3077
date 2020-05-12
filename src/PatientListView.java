@@ -15,7 +15,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
-public class PatientListView implements Observer{
+public class PatientListView{
 
 	private JFrame frame;
 	private JTable table;
@@ -104,11 +104,5 @@ public class PatientListView implements Observer{
 		frame.getContentPane().add(btnAddPatient);
 		
 		this.frame.setVisible(true);
-	}
-
-	@Override
-	public void update() {
-		// TODO Auto-generated method stub
-		
 	}
 }
