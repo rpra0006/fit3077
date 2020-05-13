@@ -46,6 +46,8 @@ public class CholestrolLevelView extends MonitorView {
 			final String nullString = "No data";
 			String cholesterolData = (String) value;
 			
+			c.setForeground(null); //set foreground to null (black) first to prevent lingering highlighting
+			
 			// return if patient does not have cholesterol
 			if(cholesterolData != nullString) {
 				String[] cholesterolComponents = cholesterolData.split(" ");
@@ -53,9 +55,6 @@ public class CholestrolLevelView extends MonitorView {
 				
 				if(cholesterolValue > averageChol) {
 					c.setForeground(Color.RED);
-				}
-				else {
-					c.setForeground(null);
 				}
 			}
 			
