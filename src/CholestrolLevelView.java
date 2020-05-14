@@ -33,6 +33,7 @@ public class CholestrolLevelView extends MonitorView {
 	private PatientMonitor patientMonitor = new CholestrolMonitor();
 	private DefaultTableModel model;
 	private JTextField txtSetTimerInterval;
+	private JTextField addressInfoField;
 	
 	class CholesterolCellRenderer extends DefaultTableCellRenderer {
 		/**
@@ -96,7 +97,7 @@ public class CholestrolLevelView extends MonitorView {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 712, 492);
+		frame.setBounds(100, 100, 764, 492);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -125,12 +126,12 @@ public class CholestrolLevelView extends MonitorView {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int i = table.getSelectedRow();
-				patientNameField.setText(model.getValueAt(i, 0).toString());
-				/*
-				patientBirthDateField.setText(patientMonitor.getPatientBdate(i));
-				patientGenderField.setText(patientMonitor.getPatientGender(i));
-				patientAddressField.setText(patientMonitor.getPatientAddress(i));
-				*/
+				String patientTableName = model.getValueAt(i, 0).toString();
+				patientNameField.setText(patientTableName);
+				patientBirthDateField.setText(patientMonitor.getPatientBdate(patientTableName));
+				patientGenderField.setText(patientMonitor.getPatientGender(patientTableName));
+				patientAddressField.setText(patientMonitor.getPatientAddress(patientTableName));
+				addressInfoField.setText(patientMonitor.getPatientAddressInfo(patientTableName));
 			}
 		});
 		
@@ -139,7 +140,7 @@ public class CholestrolLevelView extends MonitorView {
 		
 		patientNameField = new JTextField();
 		patientNameField.setText("Name");
-		patientNameField.setBounds(516, 33, 160, 23);
+		patientNameField.setBounds(516, 33, 207, 23);
 		frame.getContentPane().add(patientNameField);
 		patientNameField.setColumns(10);
 		
@@ -159,11 +160,12 @@ public class CholestrolLevelView extends MonitorView {
 				}
 			}
 		});
-		btnRemovePatient.setBounds(538, 177, 124, 23);
+		btnRemovePatient.setBounds(560, 211, 124, 23);
 		frame.getContentPane().add(btnRemovePatient);
 		
 		txtSetTimerInterval = new JTextField();
-		txtSetTimerInterval.setBounds(516, 332, 160, 23);
+		txtSetTimerInterval.setText("Enter time in seconds...");
+		txtSetTimerInterval.setBounds(516, 332, 207, 23);
 		frame.getContentPane().add(txtSetTimerInterval);
 		txtSetTimerInterval.setColumns(10);
 		
@@ -175,23 +177,28 @@ public class CholestrolLevelView extends MonitorView {
 				setPatientDataTimer(second);
 			}
 		});
-		btnSetTimer.setBounds(538, 366, 124, 23);
+		btnSetTimer.setBounds(560, 366, 124, 23);
 		frame.getContentPane().add(btnSetTimer);
 		
 		patientBirthDateField = new JTextField();
 		patientBirthDateField.setText("Birth Date");
-		patientBirthDateField.setBounds(516, 67, 160, 23);
+		patientBirthDateField.setBounds(516, 67, 207, 23);
 		frame.getContentPane().add(patientBirthDateField);
 		
 		patientGenderField = new JTextField();
 		patientGenderField.setText("Gender");
-		patientGenderField.setBounds(516, 105, 160, 23);
+		patientGenderField.setBounds(516, 105, 207, 23);
 		frame.getContentPane().add(patientGenderField);
 		
 		patientAddressField = new JTextField();
 		patientAddressField.setText("Address");
-		patientAddressField.setBounds(516, 143, 160, 23);
+		patientAddressField.setBounds(516, 143, 207, 23);
 		frame.getContentPane().add(patientAddressField);
+		
+		addressInfoField = new JTextField();
+		addressInfoField.setText("Address Information");
+		addressInfoField.setBounds(516, 177, 207, 23);
+		frame.getContentPane().add(addressInfoField);
 		
 		this.patientMonitor.attach(this);
 	}
