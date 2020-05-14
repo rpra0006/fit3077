@@ -2,12 +2,15 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.BorderLayout;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
+import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Patient;
 
 import javax.swing.JButton;
@@ -21,7 +24,7 @@ public class PatientListView {
 	private JTable table;
 	private String pracId;
 	private FhirServer server = new FhirApiAdapter();
-	private MonitorView observationView;
+	private MonitorView cholesterolView;
 	
 	/**
 	 * Create the application.
@@ -87,19 +90,32 @@ public class PatientListView {
 		JButton btnCholestrolLevel = new JButton("Cholestrol Level");
 		btnCholestrolLevel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				observationView = new CholestrolLevelView();
-				observationView.launchScreen();
+				// only create one instance of monitor
+				if(cholesterolView == null) {
+					cholesterolView = new CholestrolLevelView();
+					cholesterolView.launchScreen();
+				}
 			}
 		});
 		btnCholestrolLevel.setBounds(361, 392, 167, 23);
 		frame.getContentPane().add(btnCholestrolLevel);
 		
-		JButton btnAddPatient = new JButton("Add Patient");
+		JButton btnAddPatient = new JButton("Add Patient To Monitor");
 		btnAddPatient.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				final String cholesterolCode = "2093-3";
 				int row = table.getSelectedRow();
-				if(observationView != null) {
-					observationView.addPatientToMonitor(allPatients.get(row));
+				
+				Patient selectedPatient = allPatients.get(row);
+				Observation selectedPatientCholesterol = server.getPatientLatestObservation(selectedPatient.getIdentifier().get(0).getValue(), cholesterolCode);
+				
+				if(cholesterolView != null) {
+					if(selectedPatientCholesterol == null) {
+						JOptionPane.showMessageDialog(null, "Patient does not have cholesterol reading");
+					}
+					else {
+						cholesterolView.addPatientToMonitor(selectedPatient);
+					}
 				}
 			}
 		});

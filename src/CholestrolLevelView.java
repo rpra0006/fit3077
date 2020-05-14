@@ -18,6 +18,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Map;
 import javax.swing.JTextPane;
 import javax.swing.JFormattedTextField;
@@ -127,11 +129,44 @@ public class CholestrolLevelView extends MonitorView {
 			public void mouseClicked(MouseEvent e) {
 				int i = table.getSelectedRow();
 				String patientTableName = model.getValueAt(i, 0).toString();
+				ArrayList<Patient> patientList = patientMonitor.getAllPatients();
+				
+				Patient selectedPatient = null;
+				
+				for(Patient p: patientList) {
+					if(p.getName().get(0).getNameAsSingleString().equals(patientTableName)){
+						selectedPatient = p;
+						break;
+					}
+				}
+				
 				patientNameField.setText(patientTableName);
-				patientBirthDateField.setText(patientMonitor.getPatientBdate(patientTableName));
-				patientGenderField.setText(patientMonitor.getPatientGender(patientTableName));
-				patientAddressField.setText(patientMonitor.getPatientAddress(patientTableName));
-				addressInfoField.setText(patientMonitor.getPatientAddressInfo(patientTableName));
+				patientBirthDateField.setText(new SimpleDateFormat("dd MMM yyyy").format(selectedPatient.getBirthDate()));
+				patientGenderField.setText(selectedPatient.getGender().getDisplay());
+				patientAddressField.setText(selectedPatient.getAddressFirstRep().getLine().toString());
+				
+				String patientCity = selectedPatient.getAddressFirstRep().getCity();
+				String patientState = selectedPatient.getAddressFirstRep().getState();
+				String patientCountry = selectedPatient.getAddressFirstRep().getCountry();
+				String patientFullAddress = String.format("%s %s %s", patientCity, patientState, patientCountry);
+				addressInfoField.setText(patientFullAddress);
+				
+				/* possible code for alert
+				String displayString = "";
+				
+				displayString += "Name: " + patientTableName + "\n";
+				displayString += "Date of Birth: " + new SimpleDateFormat("dd MMM yyyy").format(selectedPatient.getBirthDate()) + "\n";
+				displayString += "Gender: " + selectedPatient.getGender().getDisplay() + "\n";
+				displayString += "Address Line: " + selectedPatient.getAddressFirstRep().getLine().toString() + "\n";
+				
+				String patientCity = selectedPatient.getAddressFirstRep().getCity();
+				String patientState = selectedPatient.getAddressFirstRep().getState();
+				String patientCountry = selectedPatient.getAddressFirstRep().getCountry();
+				String patientFullAddress = String.format("%s %s %s", patientCity, patientState, patientCountry);
+				displayString += "Full Address: " + patientFullAddress;
+				
+				JOptionPane.showMessageDialog(null, displayString);
+				 */
 			}
 		});
 		
@@ -227,20 +262,16 @@ public class CholestrolLevelView extends MonitorView {
 			String cholestrolLevel;
 			String dateIssued;
 			
-			if(observation == null) {
-				cholestrolLevel = "No data";
-			}
-			else{
-				// update cholesterol and count for average
-				totalCholesterol += observation.getValueQuantity().getValue().floatValue();
-				patientCholCount += 1;
+			// update cholesterol and count for average
+			totalCholesterol += observation.getValueQuantity().getValue().floatValue();
+			patientCholCount += 1;
 				
-				cholestrolLevel = observation.getValueQuantity().getValue() + " " +  observation.getValueQuantity().getUnit();
-				dateIssued = observation.getIssued().toString();
-				row[2] = dateIssued;
-			}
-			row[1] = cholestrolLevel;
+			cholestrolLevel = observation.getValueQuantity().getValue() + " " +  observation.getValueQuantity().getUnit();
+			dateIssued = observation.getIssued().toString();
+			
 			row[0] = patient.getName().get(0).getNameAsSingleString();
+			row[1] = cholestrolLevel;
+			row[2] = dateIssued;
 			
 			model.addRow(row);
 		}
