@@ -19,6 +19,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Map;
+import javax.swing.JTextPane;
+import javax.swing.JFormattedTextField;
 
 public class CholestrolLevelView extends MonitorView {
 
@@ -128,7 +130,8 @@ public class CholestrolLevelView extends MonitorView {
 		scrollPane.setViewportView(table);
 		
 		patientNameField = new JTextField();
-		patientNameField.setBounds(516, 139, 160, 23);
+		patientNameField.setText("Name");
+		patientNameField.setBounds(516, 33, 160, 23);
 		frame.getContentPane().add(patientNameField);
 		patientNameField.setColumns(10);
 		
@@ -148,11 +151,11 @@ public class CholestrolLevelView extends MonitorView {
 				}
 			}
 		});
-		btnRemovePatient.setBounds(538, 174, 124, 23);
+		btnRemovePatient.setBounds(538, 177, 124, 23);
 		frame.getContentPane().add(btnRemovePatient);
 		
 		txtSetTimerInterval = new JTextField();
-		txtSetTimerInterval.setBounds(516, 223, 160, 23);
+		txtSetTimerInterval.setBounds(516, 332, 160, 23);
 		frame.getContentPane().add(txtSetTimerInterval);
 		txtSetTimerInterval.setColumns(10);
 		
@@ -164,8 +167,23 @@ public class CholestrolLevelView extends MonitorView {
 				setPatientDataTimer(second);
 			}
 		});
-		btnSetTimer.setBounds(538, 257, 124, 23);
+		btnSetTimer.setBounds(538, 366, 124, 23);
 		frame.getContentPane().add(btnSetTimer);
+		
+		JFormattedTextField patientBirthDateField = new JFormattedTextField();
+		patientBirthDateField.setText("Birth Date");
+		patientBirthDateField.setBounds(516, 67, 160, 23);
+		frame.getContentPane().add(patientBirthDateField);
+		
+		JFormattedTextField patientGenderField = new JFormattedTextField();
+		patientGenderField.setText("Gender");
+		patientGenderField.setBounds(516, 105, 160, 23);
+		frame.getContentPane().add(patientGenderField);
+		
+		JFormattedTextField patientAddressField = new JFormattedTextField();
+		patientAddressField.setText("Address");
+		patientAddressField.setBounds(516, 143, 160, 23);
+		frame.getContentPane().add(patientAddressField);
 		
 		this.patientMonitor.attach(this);
 	}
