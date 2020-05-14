@@ -69,9 +69,9 @@ public abstract class PatientMonitor implements Subject {
 	public String getPatientBdate(String name) {
 		for(Patient p: this.patients) {
 			if(p.getName().get(0).getNameAsSingleString().compareTo(name) == 0) {
-				DateFormat dateFormat = new SimpleDateFormat("dd/mm/yyyy");  
+				DateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");  
 				String strDate = dateFormat.format(p.getBirthDate());  
-				return strDate; 
+				return strDate;
 			}
 		}
 		return "Not found";
