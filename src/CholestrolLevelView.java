@@ -27,6 +27,9 @@ public class CholestrolLevelView extends MonitorView {
 	private JFrame frame;
 	private JTable table;
 	private JTextField patientNameField;
+	private JTextField patientBirthDateField;
+	private JTextField patientGenderField;
+	private JTextField patientAddressField;
 	private PatientMonitor patientMonitor = new CholestrolMonitor();
 	private DefaultTableModel model;
 	private JTextField txtSetTimerInterval;
@@ -123,6 +126,11 @@ public class CholestrolLevelView extends MonitorView {
 			public void mouseClicked(MouseEvent e) {
 				int i = table.getSelectedRow();
 				patientNameField.setText(model.getValueAt(i, 0).toString());
+				/*
+				patientBirthDateField.setText(patientMonitor.getPatientBdate(i));
+				patientGenderField.setText(patientMonitor.getPatientGender(i));
+				patientAddressField.setText(patientMonitor.getPatientAddress(i));
+				*/
 			}
 		});
 		
@@ -170,17 +178,17 @@ public class CholestrolLevelView extends MonitorView {
 		btnSetTimer.setBounds(538, 366, 124, 23);
 		frame.getContentPane().add(btnSetTimer);
 		
-		JFormattedTextField patientBirthDateField = new JFormattedTextField();
+		patientBirthDateField = new JTextField();
 		patientBirthDateField.setText("Birth Date");
 		patientBirthDateField.setBounds(516, 67, 160, 23);
 		frame.getContentPane().add(patientBirthDateField);
 		
-		JFormattedTextField patientGenderField = new JFormattedTextField();
+		patientGenderField = new JTextField();
 		patientGenderField.setText("Gender");
 		patientGenderField.setBounds(516, 105, 160, 23);
 		frame.getContentPane().add(patientGenderField);
 		
-		JFormattedTextField patientAddressField = new JFormattedTextField();
+		patientAddressField = new JTextField();
 		patientAddressField.setText("Address");
 		patientAddressField.setBounds(516, 143, 160, 23);
 		frame.getContentPane().add(patientAddressField);
