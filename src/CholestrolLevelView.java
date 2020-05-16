@@ -101,7 +101,7 @@ public class CholestrolLevelView extends MonitorView {
 		
 		frame = new JFrame();
 		frame.setBounds(100, 100, 764, 492);
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		JLabel lblCholestrolLevels = new JLabel("Cholestrol Levels");
@@ -283,5 +283,9 @@ public class CholestrolLevelView extends MonitorView {
 	
 	private void setAverageHighlighting(float averageCholesterol) {
 		this.table.getColumnModel().getColumn(1).setCellRenderer(new CholesterolCellRenderer(averageCholesterol));
+	}
+	
+	public void setFrameVisible() {
+		frame.setVisible(true);
 	}
 }

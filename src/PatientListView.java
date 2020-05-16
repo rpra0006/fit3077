@@ -24,7 +24,7 @@ public class PatientListView {
 	private JTable table;
 	private String pracId;
 	private FhirServer server = new FhirApiAdapter();
-	private MonitorView cholesterolView;
+	private MonitorView cholesterolView = new CholestrolLevelView();
 	
 	/**
 	 * Create the application.
@@ -92,9 +92,9 @@ public class PatientListView {
 			public void actionPerformed(ActionEvent e) {
 				// only create one instance of monitor
 				if(cholesterolView == null) {
-					cholesterolView = new CholestrolLevelView();
 					cholesterolView.launchScreen();
 				}
+				cholesterolView.setFrameVisible();
 			}
 		});
 		btnCholestrolLevel.setBounds(361, 392, 167, 23);
