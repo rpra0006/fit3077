@@ -48,7 +48,22 @@ public abstract class PatientMonitor implements Subject {
 	
 	//add patient to monitor to connect with CholestrolLevelView
 	public void addPatient(Patient p) {
-		this.patients.add(p);
+		Boolean exists = false;
+		
+		for(Patient existingPatient: this.patients) {
+			String existingPatientId = existingPatient.getId();
+			String currentPatientId = p.getId();
+			
+			if(existingPatientId.equals(currentPatientId)) {
+				exists = true;
+				break;
+			}
+		}
+		
+		if(!exists) {
+			this.patients.add(p);
+		}
+		System.out.println(this.patients.size());
 	}
 	
 	public void removePatientByName(String name) {
