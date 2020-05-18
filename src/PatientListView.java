@@ -24,7 +24,7 @@ public class PatientListView {
 	private JTable table;
 	private String pracId;
 	private FhirServer server = new FhirApiAdapter();
-	private MonitorView cholesterolView = new CholestrolLevelView();
+	private MonitorView cholesterolView = null;
 	
 	/**
 	 * Create the application.
@@ -90,11 +90,8 @@ public class PatientListView {
 		JButton btnCholestrolLevel = new JButton("Cholestrol Level");
 		btnCholestrolLevel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// only create one instance of monitor
-				if(cholesterolView == null) {
-					cholesterolView.launchScreen();
-				}
-				cholesterolView.setFrameVisible();
+				cholesterolView = new CholestrolLevelView();
+				cholesterolView.launchScreen();
 			}
 		});
 		btnCholestrolLevel.setBounds(361, 392, 167, 23);
@@ -105,6 +102,11 @@ public class PatientListView {
 			public void actionPerformed(ActionEvent e) {
 				final String cholesterolCode = "2093-3";
 				int row = table.getSelectedRow();
+				
+				if(row < 0) {
+					JOptionPane.showMessageDialog(null, "Please select a patient to add");
+					return;
+				}
 				
 				Patient selectedPatient = allPatients.get(row);
 				Observation selectedPatientCholesterol = server.getPatientLatestObservation(selectedPatient.getIdentifier().get(0).getValue(), cholesterolCode);

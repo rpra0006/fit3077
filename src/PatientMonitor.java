@@ -80,4 +80,8 @@ public abstract class PatientMonitor implements Subject {
 	}
 	
 	public abstract Map<Patient, Observation> getAllObservation();
+	
+	public void stopMonitor() {
+		timer.cancel();
+	}
 }

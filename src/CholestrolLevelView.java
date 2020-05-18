@@ -18,6 +18,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Map;
@@ -237,6 +239,19 @@ public class CholestrolLevelView extends MonitorView {
 		frame.getContentPane().add(addressInfoField);
 		
 		this.patientMonitor.attach(this);
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				System.out.println("Monitor closing");
+				patientMonitor.stopMonitor();
+			}
+			
+			@Override
+			public void windowClosed(WindowEvent e) {
+				System.out.println("Monitor closed");
+				patientMonitor.stopMonitor();
+			}
+		});
 	}
 	
 	public void addPatientToMonitor(Patient patientData) {
@@ -285,7 +300,4 @@ public class CholestrolLevelView extends MonitorView {
 		this.table.getColumnModel().getColumn(1).setCellRenderer(new CholesterolCellRenderer(averageCholesterol));
 	}
 	
-	public void setFrameVisible() {
-		frame.setVisible(true);
-	}
 }
