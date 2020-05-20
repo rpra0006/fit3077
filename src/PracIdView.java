@@ -42,16 +42,16 @@ public class PracIdView {
 	private void initialize() {
 		frmFit = new JFrame();
 		frmFit.setTitle("FIT3077");
-		frmFit.setBounds(100, 100, 338, 275);
+		frmFit.setBounds(100, 100, 419, 313);
 		frmFit.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmFit.getContentPane().setLayout(null);
 		
-		JLabel lblEnterPractitionerId = new JLabel("Enter Practitioner ID ");
-		lblEnterPractitionerId.setBounds(108, 66, 127, 33);
+		JLabel lblEnterPractitionerId = new JLabel("Enter Practitioner Identifier");
+		lblEnterPractitionerId.setBounds(128, 67, 157, 33);
 		frmFit.getContentPane().add(lblEnterPractitionerId);
 		
 		pracId = new JTextField();
-		pracId.setBounds(87, 110, 148, 33);
+		pracId.setBounds(128, 111, 146, 33);
 		frmFit.getContentPane().add(pracId);
 		pracId.setColumns(10);
 		
@@ -64,7 +64,7 @@ public class PracIdView {
 				frmFit.dispose();
 			}
 		});
-		pracIdbutton.setBounds(107, 173, 109, 23);
+		pracIdbutton.setBounds(138, 155, 125, 23);
 		frmFit.getContentPane().add(pracIdbutton);
 	}
 

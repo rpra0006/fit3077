@@ -34,10 +34,11 @@ public class CholestrolLevelView extends MonitorView {
 	private JTextField patientBirthDateField;
 	private JTextField patientGenderField;
 	private JTextField patientAddressField;
-	private PatientMonitor patientMonitor = null;
+	private PatientMonitor patientMonitor = new CholestrolMonitor();
 	private DefaultTableModel model;
 	private JTextField txtSetTimerInterval;
 	private JTextField addressInfoField;
+	private Boolean isRunning = false;
 	
 	class CholesterolCellRenderer extends DefaultTableCellRenderer {
 		/**
@@ -79,9 +80,8 @@ public class CholestrolLevelView extends MonitorView {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					if(patientMonitor == null) {
-						initialize();
-					}
+					initialize();
+					isRunning = true;
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -98,20 +98,21 @@ public class CholestrolLevelView extends MonitorView {
 
 	/**
 	 * Initialize the contents of the frame.
+	 * @wbp.parser.entryPoint
 	 */
 	private void initialize() {
 		
 		frame = new JFrame();
-		frame.setBounds(100, 100, 764, 492);
+		frame.setBounds(100, 100, 882, 492);
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		JLabel lblCholestrolLevels = new JLabel("Cholestrol Levels");
-		lblCholestrolLevels.setBounds(180, 11, 135, 14);
+		lblCholestrolLevels.setBounds(249, 11, 135, 14);
 		frame.getContentPane().add(lblCholestrolLevels);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 36, 470, 408);
+		scrollPane.setBounds(10, 36, 566, 408);
 		frame.getContentPane().add(scrollPane);
 		
 		table = new JTable();
@@ -178,7 +179,7 @@ public class CholestrolLevelView extends MonitorView {
 		
 		patientNameField = new JTextField();
 		patientNameField.setText("Name");
-		patientNameField.setBounds(516, 33, 207, 23);
+		patientNameField.setBounds(626, 33, 207, 23);
 		frame.getContentPane().add(patientNameField);
 		patientNameField.setColumns(10);
 		
@@ -198,12 +199,12 @@ public class CholestrolLevelView extends MonitorView {
 				}
 			}
 		});
-		btnRemovePatient.setBounds(560, 211, 124, 23);
+		btnRemovePatient.setBounds(675, 211, 124, 23);
 		frame.getContentPane().add(btnRemovePatient);
 		
 		txtSetTimerInterval = new JTextField();
 		txtSetTimerInterval.setText("Enter time in seconds...");
-		txtSetTimerInterval.setBounds(516, 332, 207, 23);
+		txtSetTimerInterval.setBounds(626, 332, 207, 23);
 		frame.getContentPane().add(txtSetTimerInterval);
 		txtSetTimerInterval.setColumns(10);
 		
@@ -215,33 +216,28 @@ public class CholestrolLevelView extends MonitorView {
 				setPatientDataTimer(second);
 			}
 		});
-		btnSetTimer.setBounds(560, 366, 124, 23);
+		btnSetTimer.setBounds(675, 368, 124, 23);
 		frame.getContentPane().add(btnSetTimer);
 		
 		patientBirthDateField = new JTextField();
 		patientBirthDateField.setText("Birth Date");
-		patientBirthDateField.setBounds(516, 67, 207, 23);
+		patientBirthDateField.setBounds(626, 71, 207, 23);
 		frame.getContentPane().add(patientBirthDateField);
 		
 		patientGenderField = new JTextField();
 		patientGenderField.setText("Gender");
-		patientGenderField.setBounds(516, 105, 207, 23);
+		patientGenderField.setBounds(626, 109, 207, 23);
 		frame.getContentPane().add(patientGenderField);
 		
 		patientAddressField = new JTextField();
 		patientAddressField.setText("Address");
-		patientAddressField.setBounds(516, 143, 207, 23);
+		patientAddressField.setBounds(626, 143, 207, 23);
 		frame.getContentPane().add(patientAddressField);
 		
 		addressInfoField = new JTextField();
 		addressInfoField.setText("Address Information");
-		addressInfoField.setBounds(516, 177, 207, 23);
+		addressInfoField.setBounds(626, 177, 207, 23);
 		frame.getContentPane().add(addressInfoField);
-		
-		if(patientMonitor == null) {
-			this.patientMonitor = new CholestrolMonitor();
-			frame.setVisible(true);
-		}
 		
 		this.patientMonitor.attach(this);
 		frame.addWindowListener(new WindowAdapter() {
@@ -249,16 +245,18 @@ public class CholestrolLevelView extends MonitorView {
 			public void windowClosing(WindowEvent e) {
 				System.out.println("Monitor closing");
 				patientMonitor.stopMonitor();
-				patientMonitor = null;
+				isRunning = false;
 			}
 			
 			@Override
 			public void windowClosed(WindowEvent e) {
 				System.out.println("Monitor closed");
 				patientMonitor.stopMonitor();
-				patientMonitor = null;
+				isRunning = false;
 			}
 		});
+		patientMonitor.startMonitor();
+		frame.setVisible(true);
 	}
 	
 	public void addPatientToMonitor(Patient patientData) {
@@ -301,6 +299,10 @@ public class CholestrolLevelView extends MonitorView {
 		
 		float averageCholesterol = totalCholesterol / patientCholCount;
 		setAverageHighlighting(averageCholesterol);
+	}
+	
+	public Boolean isRunning() {
+		return this.isRunning;
 	}
 	
 	private void setAverageHighlighting(float averageCholesterol) {

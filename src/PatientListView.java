@@ -24,7 +24,7 @@ public class PatientListView {
 	private JTable table;
 	private String pracId;
 	private FhirServer server = new FhirApiAdapter();
-	private MonitorView cholesterolView = null;
+	private MonitorView cholesterolView = new CholestrolLevelView();
 	
 	/**
 	 * Create the application.
@@ -44,11 +44,11 @@ public class PatientListView {
 		frame.getContentPane().setLayout(null);
 		
 		JLabel patientList = new JLabel("Patient List");
-		patientList.setBounds(422, 32, 201, 63);
+		patientList.setBounds(406, 33, 201, 63);
 		frame.getContentPane().add(patientList);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(135, 85, 647, 241);
+		scrollPane.setBounds(70, 85, 712, 241);
 		frame.getContentPane().add(scrollPane);
 		
 		table = new JTable();
@@ -91,10 +91,9 @@ public class PatientListView {
 		btnCholestrolLevel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// only create single instance of cholestrol view
-				if(cholesterolView == null) {
-					cholesterolView = new CholestrolLevelView();
+				if(!cholesterolView.isRunning()) {
+					cholesterolView.launchScreen();
 				}
-				cholesterolView.launchScreen();
 			}
 		});
 		btnCholestrolLevel.setBounds(361, 392, 167, 23);

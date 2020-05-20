@@ -10,7 +10,7 @@ public abstract class PatientMonitor implements Subject {
 	private Timer timer;
 	
 	public PatientMonitor() {
-		this.startNotification();
+		
 	}
 	
 	@Override
@@ -30,7 +30,7 @@ public abstract class PatientMonitor implements Subject {
 		}
 	}
 	
-	private void startNotification() {
+	public void startMonitor() {
 		timer = new Timer();
 		timer.scheduleAtFixedRate(new TimerTask() {
 			@Override
@@ -43,7 +43,7 @@ public abstract class PatientMonitor implements Subject {
 	public void setUpdateTime(int updateTime) {
 		this.secondsToUpdate = updateTime;
 		timer.cancel();
-		this.startNotification();
+		this.startMonitor();
 	}
 	
 	//add patient to monitor to connect with CholestrolLevelView
