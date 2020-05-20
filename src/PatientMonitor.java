@@ -9,9 +9,6 @@ public abstract class PatientMonitor implements Subject {
 	private ArrayList<Patient> patients = new ArrayList<Patient>();
 	private Timer timer;
 	
-	public PatientMonitor() {
-		
-	}
 	
 	@Override
 	public void attach(Observer o) {
