@@ -90,7 +90,10 @@ public class PatientListView {
 		JButton btnCholestrolLevel = new JButton("Cholestrol Level");
 		btnCholestrolLevel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				cholesterolView = new CholestrolLevelView();
+				// only create single instance of cholestrol view
+				if(cholesterolView == null) {
+					cholesterolView = new CholestrolLevelView();
+				}
 				cholesterolView.launchScreen();
 			}
 		});

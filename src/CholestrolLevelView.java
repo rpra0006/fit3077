@@ -34,7 +34,7 @@ public class CholestrolLevelView extends MonitorView {
 	private JTextField patientBirthDateField;
 	private JTextField patientGenderField;
 	private JTextField patientAddressField;
-	private PatientMonitor patientMonitor = new CholestrolMonitor();
+	private PatientMonitor patientMonitor = null;
 	private DefaultTableModel model;
 	private JTextField txtSetTimerInterval;
 	private JTextField addressInfoField;
@@ -76,12 +76,12 @@ public class CholestrolLevelView extends MonitorView {
 	 * Launch the application.
 	 */
 	public void launchScreen() {
-		CholestrolLevelView window = this;
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					//CholestrolLevelView window = new CholestrolLevelView();
-					window.frame.setVisible(true);
+					if(patientMonitor == null) {
+						initialize();
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -93,7 +93,7 @@ public class CholestrolLevelView extends MonitorView {
 	 * Create the application.
 	 */
 	public CholestrolLevelView() {
-		initialize();
+
 	}
 
 	/**
@@ -238,18 +238,25 @@ public class CholestrolLevelView extends MonitorView {
 		addressInfoField.setBounds(516, 177, 207, 23);
 		frame.getContentPane().add(addressInfoField);
 		
+		if(patientMonitor == null) {
+			this.patientMonitor = new CholestrolMonitor();
+			frame.setVisible(true);
+		}
+		
 		this.patientMonitor.attach(this);
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				System.out.println("Monitor closing");
 				patientMonitor.stopMonitor();
+				patientMonitor = null;
 			}
 			
 			@Override
 			public void windowClosed(WindowEvent e) {
 				System.out.println("Monitor closed");
 				patientMonitor.stopMonitor();
+				patientMonitor = null;
 			}
 		});
 	}
