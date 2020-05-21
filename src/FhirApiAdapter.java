@@ -27,6 +27,9 @@ public class FhirApiAdapter extends FhirServer {
 		client = ctx.newRestfulGenericClient(BASE_URL);
 	}
 	
+	/**
+	 * Gets a single Patient instance, given a patient identifier
+	 */
 	@Override
 	public Patient getPatient(String patientIdentifier) {
 		final String PATIENT_SEARCH_URL = "Patient?identifier=https://github.com/synthetichealth/synthea|" + patientIdentifier;
@@ -34,7 +37,10 @@ public class FhirApiAdapter extends FhirServer {
 		Patient patient = (Patient) patientBundle.getEntry().get(0).getResource();
 		return patient;
 	}
-
+	
+	/**
+	 * Gets a list of patients that a given practitioner has treated
+	 */
 	@Override
 	public ArrayList<Patient> getAllPractitionerPatients(String practitionerID) {
 		final String ENCOUNTER_SEARCH_URL = "Encounter?participant.identifier=http://hl7.org/fhir/sid/us-npi|" + practitionerID;
@@ -71,6 +77,10 @@ public class FhirApiAdapter extends FhirServer {
 		return removeDuplicates(patientList); //contains duplicates 
 	}
 	
+	
+	/**
+	 * Remove duplicate patient entries
+	 */
 	private ArrayList<Patient> removeDuplicates(ArrayList<Patient> patientList) {
 		ArrayList<Patient> noDuplicatesList = new ArrayList<Patient>();
 		HashSet<String> availableIdentifiers = new HashSet<String>();
@@ -86,7 +96,11 @@ public class FhirApiAdapter extends FhirServer {
 		}
 		return noDuplicatesList;
 	}
-
+	
+	
+	/**
+	 * Gets a list of observations (according to observationCode), given a patient's identifier
+	 */
 	@Override
 	public Observation getPatientLatestObservation(String patientIdentifier, String observationCode) {
 		final String OBSERVATION_SEARCH_URL = "Observation?patient.identifier=https://github.com/synthetichealth/synthea|" + patientIdentifier + 
