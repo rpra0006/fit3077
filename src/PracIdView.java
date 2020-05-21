@@ -9,7 +9,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class PracIdView {
-
+	/*
+	 * Initial screen to recieve practitioner id
+	 */
+	
 	private JFrame frmFit;
 	private JTextField pracId;
 
@@ -59,9 +62,9 @@ public class PracIdView {
 		pracIdbutton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String s = pracId.getText();
+				// Create a patient list screen with practitioner id passed as argument
 				PatientListView patientList = new PatientListView(s);
-				//patientList.patientScreen();
-				frmFit.dispose();
+				frmFit.dispose(); // Dispose pracidview screen
 			}
 		});
 		pracIdbutton.setBounds(138, 155, 125, 23);

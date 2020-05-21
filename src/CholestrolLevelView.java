@@ -27,7 +27,10 @@ import javax.swing.JTextPane;
 import javax.swing.JFormattedTextField;
 
 public class CholestrolLevelView extends MonitorView {
-
+	/* Display the cholestrol level of patients and highlight the ones above average
+	 * in a table. Display patient data when clicked on.
+	 */
+	
 	private JFrame frame;
 	private JTable table;
 	private JTextField patientNameField;
@@ -41,8 +44,8 @@ public class CholestrolLevelView extends MonitorView {
 	private Boolean isRunning = false;
 	
 	class CholesterolCellRenderer extends DefaultTableCellRenderer {
-		/**
-		 * 
+		/*
+		 * Set custom cell color to table cell
 		 */
 		private static final long serialVersionUID = 1L;
 		float averageChol;
@@ -131,6 +134,7 @@ public class CholestrolLevelView extends MonitorView {
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				// Event for mouse click on table, to display patient data
 				int i = table.getSelectedRow();
 				String patientTableName = model.getValueAt(i, 0).toString();
 				ArrayList<Patient> patientList = patientMonitor.getAllPatients();
@@ -154,23 +158,6 @@ public class CholestrolLevelView extends MonitorView {
 				String patientCountry = selectedPatient.getAddressFirstRep().getCountry();
 				String patientFullAddress = String.format("%s %s %s", patientCity, patientState, patientCountry);
 				addressInfoField.setText(patientFullAddress);
-				
-				/* possible code for alert
-				String displayString = "";
-				
-				displayString += "Name: " + patientTableName + "\n";
-				displayString += "Date of Birth: " + new SimpleDateFormat("dd MMM yyyy").format(selectedPatient.getBirthDate()) + "\n";
-				displayString += "Gender: " + selectedPatient.getGender().getDisplay() + "\n";
-				displayString += "Address Line: " + selectedPatient.getAddressFirstRep().getLine().toString() + "\n";
-				
-				String patientCity = selectedPatient.getAddressFirstRep().getCity();
-				String patientState = selectedPatient.getAddressFirstRep().getState();
-				String patientCountry = selectedPatient.getAddressFirstRep().getCountry();
-				String patientFullAddress = String.format("%s %s %s", patientCity, patientState, patientCountry);
-				displayString += "Full Address: " + patientFullAddress;
-				
-				JOptionPane.showMessageDialog(null, displayString);
-				 */
 			}
 		});
 		
@@ -186,6 +173,7 @@ public class CholestrolLevelView extends MonitorView {
 		JButton btnRemovePatient = new JButton("Remove Patient");
 		btnRemovePatient.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				// Remove patient from monitor
 				int i = table.getSelectedRow();
 				String patientName = model.getValueAt(i, 0).toString();
 				
@@ -241,6 +229,7 @@ public class CholestrolLevelView extends MonitorView {
 		
 		this.patientMonitor.attach(this);
 		frame.addWindowListener(new WindowAdapter() {
+			// Notify if cholestrol monitor is closed
 			@Override
 			public void windowClosing(WindowEvent e) {
 				System.out.println("Monitor closing");
@@ -259,15 +248,26 @@ public class CholestrolLevelView extends MonitorView {
 		frame.setVisible(true);
 	}
 	
+	/**
+	 * Add patient to monitor
+	 * @param Patient (patient object)
+	 */
 	public void addPatientToMonitor(Patient patientData) {
 		patientMonitor.addPatient(patientData); //Add to patientMonitor list
 		update();
 	}
 	
+	/**
+	 * Set timer for cholestrol table
+	 * @param timer (seconds in int)
+	 */
 	private void setPatientDataTimer(int timer) {
 		patientMonitor.setUpdateTime(timer);
 	}
 	
+	/**
+	 * Update table data
+	 */
 	public void update() {
 		//list update
 		model.setRowCount(0);
@@ -301,10 +301,20 @@ public class CholestrolLevelView extends MonitorView {
 		setAverageHighlighting(averageCholesterol);
 	}
 	
+	/**
+	 * Return state of monitor, running or not running
+	 * @param none
+	 * @return Boolean
+	 */
 	public Boolean isRunning() {
 		return this.isRunning;
 	}
 	
+	/**
+	 * Update table cell color, red if above average and black if normal
+	 * @param averageCholestrol (Float value for table's averageCholestrol) 
+	 * @return void
+	 */
 	private void setAverageHighlighting(float averageCholesterol) {
 		this.table.getColumnModel().getColumn(1).setCellRenderer(new CholesterolCellRenderer(averageCholesterol));
 	}

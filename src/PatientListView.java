@@ -19,11 +19,14 @@ import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
 public class PatientListView {
-
+	/*
+	 * Display all the patients of a practitioner in a table
+	 */
+	
 	private JFrame frame;
 	private JTable table;
 	private String pracId;
-	private FhirServer server = new FhirApiAdapter();
+	private FhirServer server = new FhirApiAdapter(); // Call server to get all patients
 	private MonitorView cholesterolView = new CholestrolLevelView();
 	
 	/**
@@ -69,18 +72,18 @@ public class PatientListView {
 		table.getColumnModel().getColumn(1).setPreferredWidth(85);
 		scrollPane.setViewportView(table);
 		
-		//
 		Object[] columns = {"Patient ID", "Patient Name"};
 		DefaultTableModel model = new DefaultTableModel();
 		model.setColumnIdentifiers(columns);
 		table.setModel(model);
 		
+		// Get all patients of practitioner
 		ArrayList<Patient> allPatients = server.getAllPractitionerPatients(pracId);
 		for (Patient patient : allPatients) {
 			String[] row = new String[2];
 			row[0] = patient.getIdentifier().get(0).getValue();
 			row[1] = patient.getName().get(0).getNameAsSingleString();
-			model.addRow(row);
+			model.addRow(row);	// add to table (patient identifier, patient name)
 		}
 		
 		JLabel lblPatientMonitor = new JLabel("Patient Monitor");
@@ -101,6 +104,7 @@ public class PatientListView {
 		
 		JButton btnAddPatient = new JButton("Add Patient To Monitor");
 		btnAddPatient.addActionListener(new ActionListener() {
+			// Add patient to cholestrol monitor
 			public void actionPerformed(ActionEvent e) {
 				final String cholesterolCode = "2093-3";
 				int row = table.getSelectedRow();
@@ -114,6 +118,7 @@ public class PatientListView {
 				Observation selectedPatientCholesterol = server.getPatientLatestObservation(selectedPatient.getIdentifier().get(0).getValue(), cholesterolCode);
 				
 				if(cholesterolView != null) {
+					// Only add patient to monitor which has a cholestrol reading
 					if(selectedPatientCholesterol == null) {
 						JOptionPane.showMessageDialog(null, "Patient does not have cholesterol reading");
 					}
