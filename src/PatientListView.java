@@ -106,6 +106,10 @@ public class PatientListView {
 		btnAddPatient.addActionListener(new ActionListener() {
 			// Add patient to cholestrol monitor
 			public void actionPerformed(ActionEvent e) {
+				if(!cholesterolView.isRunning()) {
+					return; // if view is not running, don't do anything
+				}
+				
 				final String cholesterolCode = "2093-3";
 				int row = table.getSelectedRow();
 				
