@@ -3,15 +3,18 @@ import java.util.*;
 import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Patient;
 
-public abstract class PatientMonitor implements Subject {
+public abstract class PatientMonitor implements Subject, TimerNotifierObserver {
 	/*
 	 * Holds patient object list and notify observers for updates
 	 */
-	private int secondsToUpdate = 10;
+	private SingletonTimerNotifier timerNotifier = SingletonTimerNotifier.getInstance();
 	private ArrayList<Observer> observers = new ArrayList<Observer>();
 	private ArrayList<Patient> patients = new ArrayList<Patient>();
 	private Timer timer;
 	
+	public PatientMonitor() {
+		timerNotifier.attach(this);
+	}
 	
 	@Override
 	public void attach(Observer o) {
@@ -25,6 +28,7 @@ public abstract class PatientMonitor implements Subject {
 
 	@Override
 	public void notifyObservers() {
+		System.out.println("Updated this monitor");
 		for(Observer o: observers) {
 			o.update();
 		}
@@ -33,14 +37,22 @@ public abstract class PatientMonitor implements Subject {
 	/**
 	 * Start the monitor to call server for patient data at a fixed interval
 	 */
-	public void startMonitor() {
+	public void startTimer() {
 		timer = new Timer();
 		timer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
 				notifyObservers();
 			}
-		}, 0, secondsToUpdate * 1000);
+		}, 0, timerNotifier.getTime() * 1000);
+	}
+	
+	/**
+	 * Restart the monitor with new timer value
+	 */
+	private void restartTimer() {
+		timer.cancel();
+		this.startTimer();
 	}
 	
 	/**
@@ -48,11 +60,9 @@ public abstract class PatientMonitor implements Subject {
 	 * @param updateTime (seconds int)
 	 */
 	public void setUpdateTime(int updateTime) {
-		this.secondsToUpdate = updateTime;
-		timer.cancel();
-		this.startMonitor();
+		timerNotifier.setTime(updateTime);
 	}
-	
+
 	/**
 	 * Add patient to monitor to connect with CholestrolLevelView
 	 * @param p (Patient object)
@@ -74,7 +84,6 @@ public abstract class PatientMonitor implements Subject {
 		if(!exists) {
 			this.patients.add(p);
 		}
-		System.out.println(this.patients.size());
 	}
 	
 	/**
@@ -106,9 +115,17 @@ public abstract class PatientMonitor implements Subject {
 	public abstract Map<Patient, Observation> getAllObservation();
 	
 	/**
-	 * Stop monitor from recieving data from server
+	 * Stop monitor from receiving data from server
 	 */
 	public void stopMonitor() {
 		timer.cancel();
+	}
+	
+	public void updateTimer() {
+		this.restartTimer();
+	}
+	
+	public int getTime() {
+		return this.timerNotifier.getTime();
 	}
 }

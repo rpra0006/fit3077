@@ -13,6 +13,10 @@ public class CholestrolMonitor extends PatientMonitor {
 	private final String CHOLESTROL_CODE = "2093-3";
 	private FhirServer server = new FhirApiAdapter();
 	
+	public CholestrolMonitor() {
+		super();
+	}
+	
 	/**
 	 * Get all cholestrol observation of a patient
 	 * @return Map<Patient, Observation> (a map of patient object with their observations)

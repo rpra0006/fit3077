@@ -244,7 +244,7 @@ public class CholestrolLevelView extends MonitorView {
 				isRunning = false;
 			}
 		});
-		patientMonitor.startMonitor();
+		patientMonitor.startTimer();
 		frame.setVisible(true);
 	}
 	
