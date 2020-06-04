@@ -11,8 +11,10 @@ public abstract class PatientMonitor implements Subject, TimerNotifierObserver {
 	private ArrayList<Observer> observers = new ArrayList<Observer>();
 	private ArrayList<Patient> patients = new ArrayList<Patient>();
 	private Timer timer;
+	private String observationCode;
 	
-	public PatientMonitor() {
+	public PatientMonitor(String observationCode) {
+		this.observationCode = observationCode;
 		timerNotifier.attach(this);
 	}
 	
@@ -110,9 +112,9 @@ public abstract class PatientMonitor implements Subject, TimerNotifierObserver {
 	
 	/**
 	 * Get all observation of patient
-	 * @return Map<Patient, Observation>
+	 * @return Map<Patient, List<Observation>>
 	 */
-	public abstract Map<Patient, Observation> getAllObservation();
+	public abstract Map<Patient, List<Observation>> getAllPatientObservations();
 	
 	/**
 	 * Stop monitor from receiving data from server
@@ -127,5 +129,9 @@ public abstract class PatientMonitor implements Subject, TimerNotifierObserver {
 	
 	public int getTime() {
 		return this.timerNotifier.getTime();
+	}
+	
+	public String getObservationCode() {
+		return this.observationCode;
 	}
 }

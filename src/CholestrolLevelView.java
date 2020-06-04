@@ -22,6 +22,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import javax.swing.JTextPane;
 import javax.swing.JFormattedTextField;
@@ -30,6 +31,7 @@ public class CholestrolLevelView extends MonitorView {
 	/* Display the cholestrol level of patients and highlight the ones above average
 	 * in a table. Display patient data when clicked on.
 	 */
+	private final String CHOLESTEROL_CODE = "2093-3";
 	
 	private JFrame frame;
 	private JTable table;
@@ -37,7 +39,7 @@ public class CholestrolLevelView extends MonitorView {
 	private JTextField patientBirthDateField;
 	private JTextField patientGenderField;
 	private JTextField patientAddressField;
-	private PatientMonitor patientMonitor = new CholestrolMonitor();
+	private PatientMonitor patientMonitor = new LatestMonitor(CHOLESTEROL_CODE);
 	private DefaultTableModel model;
 	private JTextField txtSetTimerInterval;
 	private JTextField addressInfoField;
@@ -274,11 +276,11 @@ public class CholestrolLevelView extends MonitorView {
 		float totalCholesterol = 0;
 		int patientCholCount = 0;
 		
-		for (Map.Entry<Patient, Observation> patientObservation : patientMonitor.getAllObservation().entrySet()){
+		for (Map.Entry<Patient, List<Observation>> patientObservation : patientMonitor.getAllPatientObservations().entrySet()){
 			String[] row = new String[3];
 			
 			Patient patient = patientObservation.getKey();
-			Observation observation = patientObservation.getValue();
+			Observation observation = patientObservation.getValue().get(0);
 			
 			String cholestrolLevel;
 			String dateIssued;
