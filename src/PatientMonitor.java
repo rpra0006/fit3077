@@ -7,6 +7,8 @@ public abstract class PatientMonitor implements Subject, TimerNotifierObserver {
 	/*
 	 * Holds patient object list and notify observers for updates
 	 */
+	private int observationsNum; // Number of observations returned on calling getAllPatientMonitors
+	private FhirServer server = new FhirApiAdapter();
 	private SingletonTimerNotifier timerNotifier = SingletonTimerNotifier.getInstance();
 	private ArrayList<Observer> observers = new ArrayList<Observer>();
 	private ArrayList<Patient> patients = new ArrayList<Patient>();
@@ -111,10 +113,22 @@ public abstract class PatientMonitor implements Subject, TimerNotifierObserver {
 	}
 	
 	/**
-	 * Get all observation of patient
-	 * @return Map<Patient, List<Observation>>
+	 * Get all observations of a patient
+	 * @return Map<Patient, List<Observation>> (a map of patient object with their list of observations)
 	 */
-	public abstract Map<Patient, List<Observation>> getAllPatientObservations();
+	public Map<Patient, List<Observation>> getAllPatientObservations() {
+		Map<Patient, List<Observation>> allPatientObservations = new HashMap<Patient, List<Observation>>();
+		ArrayList<Patient> patientList = this.getAllPatients();
+		
+		for (int i = 0; i < patientList.size(); i++) {
+			Patient patient = patientList.get(i);
+			// Get patient observation from server
+			List<Observation> patientObservationList = server.getPatientLatestObservations(patient.getIdentifier().get(0).getValue(),
+					this.getObservationCode(), this.getObservationsNum());
+			allPatientObservations.put(patient, patientObservationList);
+		}
+		return allPatientObservations;
+	}
 	
 	/**
 	 * Stop monitor from receiving data from server
@@ -133,5 +147,13 @@ public abstract class PatientMonitor implements Subject, TimerNotifierObserver {
 	
 	public String getObservationCode() {
 		return this.observationCode;
+	}
+	
+	public int getObservationsNum() {
+		return this.observationsNum;
+	}
+	
+	public void setObservationsNum(int newObservationsNum) {
+		this.observationsNum = newObservationsNum;
 	}
 }

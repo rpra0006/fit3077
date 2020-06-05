@@ -16,6 +16,7 @@ import org.hl7.fhir.r4.model.Patient;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 
 public class PatientListView {
@@ -78,7 +79,7 @@ public class PatientListView {
 		table.setModel(model);
 		
 		// Get all patients of practitioner
-		ArrayList<Patient> allPatients = server.getAllPractitionerPatients(pracId);
+		List<Patient> allPatients = server.getAllPractitionerPatients(pracId);
 		for (Patient patient : allPatients) {
 			String[] row = new String[2];
 			row[0] = patient.getIdentifier().get(0).getValue();
@@ -118,8 +119,10 @@ public class PatientListView {
 					return;
 				}
 				
+				// confirm existence of cholesterol
 				Patient selectedPatient = allPatients.get(row);
-				Observation selectedPatientCholesterol = server.getPatientLatestObservation(selectedPatient.getIdentifier().get(0).getValue(), cholesterolCode);
+				List<Observation> selectedPatientCholesterol = server.getPatientLatestObservations(selectedPatient.getIdentifier().get(0).getValue(), 
+						cholesterolCode, 1);
 				
 				if(cholesterolView != null) {
 					// Only add patient to monitor which has a cholestrol reading

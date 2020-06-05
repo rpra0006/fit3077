@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
@@ -8,14 +9,12 @@ import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Patient;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.parser.*;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.exceptions.FhirClientConnectionException;
 
 public class FhirApiAdapter extends FhirServer {
 	private final String BASE_URL = "https://fhir.monash.edu/hapi-fhir-jpaserver/fhir/";
 	private FhirContext ctx = FhirContext.forR4();
-	private IParser parser = ctx.newJsonParser().setPrettyPrint(true);
 	private IGenericClient client;
 	
 	public FhirApiAdapter() {
@@ -100,24 +99,34 @@ public class FhirApiAdapter extends FhirServer {
 	
 	/**
 	 * Gets a list of observations (according to observationCode), given a patient's identifier
+	 * If the actual number of observations returned from server is less than the parameter amountToReturn,
+	 * returns the actual number of observations, that is returned from server
 	 */
 	@Override
-	public Observation getPatientLatestObservation(String patientIdentifier, String observationCode) {
+	public List<Observation> getPatientLatestObservations(String patientIdentifier, String observationCode, int amountToReturn) {
 		final String OBSERVATION_SEARCH_URL = "Observation?patient.identifier=https://github.com/synthetichealth/synthea|" + patientIdentifier + 
 				"&code=" + observationCode + "&_sort=-date"; // sort in descending order based on date
 		
+		List<Observation> observationList = new ArrayList<Observation>();
 		Bundle allObservations = client.search().byUrl(BASE_URL + OBSERVATION_SEARCH_URL)
 				.returnBundle(Bundle.class)
 				.execute();
+		int amountReturned = allObservations.getEntry().size();
 		
-		if(allObservations.getEntry().size() == 0) {
+		if(amountReturned == 0) {
 			return null;
+		}
+		else if(amountReturned < amountToReturn) {
+			amountToReturn = amountReturned;
 		}
 		
 		// since bundle is sorted in descending order based on date,
 		// first item in entry has to be latest observation
-		Observation latestObservation = (Observation) allObservations.getEntry().get(0).getResource();
-		return latestObservation;
+		for(int i = 0; i < amountToReturn; i++) {
+			Observation observation = (Observation) allObservations.getEntry().get(i).getResource();
+			observationList.add(observation);
+		}
+		return observationList;
 	}
 	
 	private Boolean hasNextLink(Bundle bundle) {
