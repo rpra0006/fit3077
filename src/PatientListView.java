@@ -27,8 +27,8 @@ public class PatientListView {
 	private JTable table;
 	private String pracId;
 	private FhirServer server = new FhirApiAdapter(); // Call server to get all patients
-	private MonitorView cholesterolView = new CholestrolLevelView();
-	
+	private MonitorView cholesterolView = new TableView();
+	private MonitorView graphView = new GraphView();
 	/**
 	 * Create the application.
 	 */
@@ -90,7 +90,7 @@ public class PatientListView {
 		lblPatientMonitor.setBounds(409, 337, 99, 14);
 		frame.getContentPane().add(lblPatientMonitor);
 		
-		JButton btnCholestrolLevel = new JButton("Cholestrol Level");
+		JButton btnCholestrolLevel = new JButton("Show Patient Table");
 		btnCholestrolLevel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// only create single instance of cholestrol view
@@ -99,7 +99,7 @@ public class PatientListView {
 				}
 			}
 		});
-		btnCholestrolLevel.setBounds(361, 392, 167, 23);
+		btnCholestrolLevel.setBounds(361, 396, 167, 23);
 		frame.getContentPane().add(btnCholestrolLevel);
 		
 		JButton btnAddPatient = new JButton("Add Patient To Monitor");
@@ -134,6 +134,15 @@ public class PatientListView {
 		});
 		btnAddPatient.setBounds(361, 362, 167, 23);
 		frame.getContentPane().add(btnAddPatient);
+		
+		JButton btnShowPatientGraph = new JButton("Show Patient Graph");
+		btnShowPatientGraph.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				graphView.launchScreen();
+			}
+		});
+		btnShowPatientGraph.setBounds(361, 430, 167, 23);
+		frame.getContentPane().add(btnShowPatientGraph);
 		
 		this.frame.setVisible(true);
 	}
