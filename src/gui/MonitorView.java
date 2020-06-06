@@ -1,3 +1,4 @@
+package gui;
 import org.hl7.fhir.r4.model.Patient;
 
 public abstract class MonitorView implements Observer {

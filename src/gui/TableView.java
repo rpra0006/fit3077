@@ -1,3 +1,4 @@
+package gui;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.EventQueue;
@@ -27,6 +28,9 @@ import java.util.Map;
 import javax.swing.JTextPane;
 import javax.swing.JFormattedTextField;
 import javax.swing.JToggleButton;
+
+import model.LatestMonitor;
+import model.PatientMonitor;
 
 public class TableView extends MonitorView {
 	/* Display the cholestrol level of patients and highlight the ones above average

@@ -1,3 +1,5 @@
+package model;
+import gui.Observer;
 
 public interface Subject {
 	/*

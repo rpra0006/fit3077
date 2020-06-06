@@ -1,3 +1,4 @@
+package gui;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -18,6 +19,7 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.data.category.DefaultCategoryDataset;
+
 import javax.swing.BoxLayout;
 
 public class GraphView extends MonitorView{

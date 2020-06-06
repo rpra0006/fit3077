@@ -1,3 +1,4 @@
+package gui;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -12,6 +13,9 @@ import javax.swing.table.TableModel;
 
 import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Patient;
+
+import model.FhirApiAdapter;
+import model.FhirServer;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -94,7 +98,7 @@ public class PatientListView {
 		JButton btnCholestrolLevel = new JButton("Show Patient Table");
 		btnCholestrolLevel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// only create single instance of cholestrol view
+				// only create single instance of cholesterol view
 				if(!cholesterolView.isRunning()) {
 					cholesterolView.launchScreen();
 				}
@@ -105,7 +109,7 @@ public class PatientListView {
 		
 		JButton btnAddPatient = new JButton("Add Patient To Monitor");
 		btnAddPatient.addActionListener(new ActionListener() {
-			// Add patient to cholestrol monitor
+			// Add patient to cholesterol monitor
 			public void actionPerformed(ActionEvent e) {
 				if(!cholesterolView.isRunning()) {
 					return; // if view is not running, don't do anything
