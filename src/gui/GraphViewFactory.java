@@ -10,13 +10,16 @@ public class GraphViewFactory implements SingletonMonitorViewFactory {
 		if(historyGraphView == null) {
 			historyGraphView = new HistoryGraphView();
 		}
-		return null;
+		return historyGraphView;
 	}
 
 	@Override
 	public LatestMonitorView createLatestView() {
 		// TODO Auto-generated method stub
-		return null;
+		if(latestGraphView == null) {
+			latestGraphView = new LatestGraphView();
+		}
+		return latestGraphView;
 	}
 
 }
