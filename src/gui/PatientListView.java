@@ -16,10 +16,12 @@ import org.hl7.fhir.r4.model.Patient;
 
 import model.FhirApiAdapter;
 import model.FhirServer;
+import model.HistoryMonitor;
+import model.LatestMonitor;
+import model.PatientMonitor;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
 
@@ -32,8 +34,19 @@ public class PatientListView {
 	private JTable table;
 	private String pracId;
 	private FhirServer server = new FhirApiAdapter(); // Call server to get all patients
-	private MonitorView cholesterolView = new TableView();
-	private MonitorView graphView = new GraphView();
+	
+	private final String CHOLESTEROL_CODE = "2093-3";
+	private final String BLOOD_PRESSURE_CODE = "55284-4";
+	
+	private PatientMonitor latestCholesterolMonitor = new LatestMonitor(CHOLESTEROL_CODE);
+	private PatientMonitor latestBloodPressureMonitor = new LatestMonitor(BLOOD_PRESSURE_CODE);
+	private PatientMonitor historyBloodPressureMonitor = new HistoryMonitor(BLOOD_PRESSURE_CODE);
+	
+	private MonitorView latestCholesterolTableView = new CholesterolLatestTable(latestCholesterolMonitor);
+	private MonitorView latestCholesterolGraphView;
+	private MonitorView historyBloodTableView;
+	private MonitorView historyBloodGraphView;
+	
 	/**
 	 * Create the application.
 	 */
@@ -99,8 +112,8 @@ public class PatientListView {
 		btnCholestrolLevel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// only create single instance of cholesterol view
-				if(!cholesterolView.isRunning()) {
-					cholesterolView.launchScreen();
+				if(!latestCholesterolTableView.isRunning()) {
+					latestCholesterolTableView.launchScreen();
 				}
 			}
 		});
@@ -109,9 +122,9 @@ public class PatientListView {
 		
 		JButton btnAddPatient = new JButton("Add Patient To Monitor");
 		btnAddPatient.addActionListener(new ActionListener() {
-			// Add patient to cholesterol monitor
+			// Add patient to monitor
 			public void actionPerformed(ActionEvent e) {
-				if(!cholesterolView.isRunning()) {
+				if(!latestCholesterolTableView.isRunning()) {
 					return; // if view is not running, don't do anything
 				}
 				
@@ -128,28 +141,19 @@ public class PatientListView {
 				List<Observation> selectedPatientCholesterol = server.getPatientLatestObservations(selectedPatient.getIdentifier().get(0).getValue(), 
 						cholesterolCode, 1);
 				
-				if(cholesterolView != null) {
+				if(latestCholesterolTableView != null) {
 					// Only add patient to monitor which has a cholestrol reading
 					if(selectedPatientCholesterol == null) {
 						JOptionPane.showMessageDialog(null, "Patient does not have cholesterol reading");
 					}
 					else {
-						cholesterolView.addPatientToMonitor(selectedPatient);
+						latestCholesterolTableView.addPatientToMonitor(selectedPatient);
 					}
 				}
 			}
 		});
 		btnAddPatient.setBounds(361, 362, 167, 23);
 		frame.getContentPane().add(btnAddPatient);
-		
-		JButton btnShowPatientGraph = new JButton("Show Patient Graph");
-		btnShowPatientGraph.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				graphView.launchScreen();
-			}
-		});
-		btnShowPatientGraph.setBounds(361, 430, 167, 23);
-		frame.getContentPane().add(btnShowPatientGraph);
 		
 		this.frame.setVisible(true);
 	}

@@ -20,7 +20,6 @@ public abstract class PatientMonitor implements Subject, TimerNotifierObserver {
 	
 	public PatientMonitor(String observationCode) {
 		this.observationCode = observationCode;
-		timerNotifier.attach(this);
 	}
 	
 	@Override
@@ -35,7 +34,6 @@ public abstract class PatientMonitor implements Subject, TimerNotifierObserver {
 
 	@Override
 	public void notifyObservers() {
-		System.out.println("Updated this monitor");
 		for(Observer o: observers) {
 			o.update();
 		}
@@ -44,7 +42,7 @@ public abstract class PatientMonitor implements Subject, TimerNotifierObserver {
 	/**
 	 * Start the monitor to call server for patient data at a fixed interval
 	 */
-	public void startTimer() {
+	public void startMonitor() {
 		timer = new Timer();
 		timer.scheduleAtFixedRate(new TimerTask() {
 			@Override
@@ -59,7 +57,7 @@ public abstract class PatientMonitor implements Subject, TimerNotifierObserver {
 	 */
 	private void restartTimer() {
 		timer.cancel();
-		this.startTimer();
+		this.startMonitor();
 	}
 	
 	/**

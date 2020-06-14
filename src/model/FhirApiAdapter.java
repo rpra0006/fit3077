@@ -69,7 +69,8 @@ public class FhirApiAdapter extends FhirServer {
 				patientList.add(patient);
 			}
 			
-			if(hasNextLink(allEncounters)) {
+			hasNextPage = hasNextLink(allEncounters);
+			if(hasNextPage) {
 				nextURL = allEncounters.getLink(Bundle.LINK_NEXT).getUrl();
 			}
 		}
@@ -131,7 +132,7 @@ public class FhirApiAdapter extends FhirServer {
 	}
 	
 	private Boolean hasNextLink(Bundle bundle) {
-		return bundle.getLink(Bundle.LINK_NEXT) == null;
+		return bundle.getLink(Bundle.LINK_NEXT) != null;
 	}
 	
 }

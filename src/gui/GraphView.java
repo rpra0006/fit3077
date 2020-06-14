@@ -20,9 +20,11 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.data.category.DefaultCategoryDataset;
 
+import model.PatientMonitor;
+
 import javax.swing.BoxLayout;
 
-public class GraphView extends MonitorView{
+public class GraphView extends MonitorView {
 	
 	private JFrame frame;
 
@@ -35,8 +37,7 @@ public class GraphView extends MonitorView{
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					GraphView window = new GraphView();
-					window.frame.setVisible(true);
+					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -48,14 +49,15 @@ public class GraphView extends MonitorView{
 	/**
 	 * Create the application.
 	 */
-	public GraphView() {
+	public GraphView(PatientMonitor monitor) {
+		super(monitor);
 		initialize();
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	public void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 1054, 579);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
