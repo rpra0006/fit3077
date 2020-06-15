@@ -27,8 +27,8 @@ public class PatientListView {
 	private JTable table;
 	private String pracId;
 	private FhirServer server = new FhirApiAdapter(); // Call server to get all patients
-	private MonitorView cholesterolView = new LatestTableView();
-	private MonitorView graphView = new LatestGraphView();
+	private MonitorView cholesterolView = new CholestrolTable();
+	private MonitorView graphView = new CholestrolGraph();
 	/**
 	 * Create the application.
 	 */
@@ -112,7 +112,7 @@ public class PatientListView {
 		lblPatientMonitor.setBounds(409, 337, 99, 14);
 		frame.getContentPane().add(lblPatientMonitor);
 		
-		JButton btnCholestrolLevel = new JButton("Show Patient Table");
+		JButton btnCholestrolLevel = new JButton("Show Patient Cholestrol Table");
 		btnCholestrolLevel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// only create single instance of cholestrol view
@@ -121,7 +121,7 @@ public class PatientListView {
 				}
 			}
 		});
-		btnCholestrolLevel.setBounds(321, 434, 243, 23);
+		btnCholestrolLevel.setBounds(321, 413, 243, 23);
 		frame.getContentPane().add(btnCholestrolLevel);
 		
 		JButton btnAddPatient = new JButton("Add Patient To Monitor");
@@ -151,17 +151,21 @@ public class PatientListView {
 				}
 			}
 		});
-		btnAddPatient.setBounds(321, 400, 243, 23);
+		btnAddPatient.setBounds(321, 379, 243, 23);
 		frame.getContentPane().add(btnAddPatient);
 		
-		JButton btnShowPatientGraph = new JButton("Show Patient Graph");
+		JButton btnShowPatientGraph = new JButton("Show Patient Cholestrol Graph");
 		btnShowPatientGraph.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				graphView.launchScreen();
 			}
 		});
-		btnShowPatientGraph.setBounds(321, 468, 243, 23);
+		btnShowPatientGraph.setBounds(321, 447, 243, 23);
 		frame.getContentPane().add(btnShowPatientGraph);
+		
+		JButton btnShowPatientBlood = new JButton("Show Patient Blood Pressure Table");
+		btnShowPatientBlood.setBounds(321, 478, 243, 23);
+		frame.getContentPane().add(btnShowPatientBlood);
 		
 		this.frame.setVisible(true);
 	}
