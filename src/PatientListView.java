@@ -27,8 +27,8 @@ public class PatientListView {
 	private JTable table;
 	private String pracId;
 	private FhirServer server = new FhirApiAdapter(); // Call server to get all patients
-	private MonitorView cholesterolView = new TableView();
-	private MonitorView graphView = new GraphView();
+	private MonitorView cholesterolView = new LatestTableView();
+	private MonitorView graphView = new LatestGraphView();
 	/**
 	 * Create the application.
 	 */
@@ -59,11 +59,11 @@ public class PatientListView {
 			new Object[][] {
 			},
 			new String[] {
-				"Patient ID", "Patient Name"
+				"Patient ID", "Patient Name","Cholestrol Monitor", "Blood Pressure Monitor"
 			}
 		) {
 			Class[] columnTypes = new Class[] {
-				Object.class, String.class
+				Object.class, String.class, Boolean.class, Boolean.class
 			};
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
@@ -72,17 +72,39 @@ public class PatientListView {
 		table.getColumnModel().getColumn(1).setPreferredWidth(85);
 		scrollPane.setViewportView(table);
 		
-		Object[] columns = {"Patient ID", "Patient Name"};
-		DefaultTableModel model = new DefaultTableModel();
+		Object[] columns = {"Patient ID", "Patient Name","Cholestrol Monitor", "Blood Pressure Monitor"};
+		DefaultTableModel model = new DefaultTableModel() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+            public Class getColumnClass(int column) {
+                switch (column) {
+                    case 0:
+                        return String.class;
+                    case 1:
+                        return String.class;
+                    case 2:
+                        return Boolean.class;
+                    default:
+                        return Boolean.class;
+                }
+		 	}
+		};
 		model.setColumnIdentifiers(columns);
 		table.setModel(model);
 		
 		// Get all patients of practitioner
 		ArrayList<Patient> allPatients = server.getAllPractitionerPatients(pracId);
 		for (Patient patient : allPatients) {
-			String[] row = new String[2];
+			Object[] row = new Object[4];
 			row[0] = patient.getIdentifier().get(0).getValue();
 			row[1] = patient.getName().get(0).getNameAsSingleString();
+			row[2] = false;
+			row[3] = false;
+			
 			model.addRow(row);	// add to table (patient identifier, patient name)
 		}
 		
@@ -99,7 +121,7 @@ public class PatientListView {
 				}
 			}
 		});
-		btnCholestrolLevel.setBounds(361, 396, 167, 23);
+		btnCholestrolLevel.setBounds(321, 434, 243, 23);
 		frame.getContentPane().add(btnCholestrolLevel);
 		
 		JButton btnAddPatient = new JButton("Add Patient To Monitor");
@@ -124,11 +146,12 @@ public class PatientListView {
 					}
 					else {
 						cholesterolView.addPatientToMonitor(selectedPatient);
+						graphView.addPatientToMonitor(selectedPatient);
 					}
 				}
 			}
 		});
-		btnAddPatient.setBounds(361, 362, 167, 23);
+		btnAddPatient.setBounds(321, 400, 243, 23);
 		frame.getContentPane().add(btnAddPatient);
 		
 		JButton btnShowPatientGraph = new JButton("Show Patient Graph");
@@ -137,7 +160,7 @@ public class PatientListView {
 				graphView.launchScreen();
 			}
 		});
-		btnShowPatientGraph.setBounds(361, 430, 167, 23);
+		btnShowPatientGraph.setBounds(321, 468, 243, 23);
 		frame.getContentPane().add(btnShowPatientGraph);
 		
 		this.frame.setVisible(true);
