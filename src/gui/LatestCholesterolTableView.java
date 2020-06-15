@@ -32,7 +32,7 @@ import javax.swing.JToggleButton;
 import model.LatestMonitor;
 import model.PatientMonitor;
 
-public class CholesterolLatestTable extends TableView {
+public class LatestCholesterolTableView extends TableView {
 	/* Display the cholestrol level of patients and highlight the ones above average
 	 * in a table. Display patient data when clicked on.
 	 */
@@ -85,26 +85,11 @@ public class CholesterolLatestTable extends TableView {
 		}
 	}
 	
-	/**
-	 * Launch the application.
-	 */
-	public void launchScreen() {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					initialize();
-					isRunning = true;
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the application.
 	 */
-	public CholesterolLatestTable(PatientMonitor monitor) {
+	public LatestCholesterolTableView(PatientMonitor monitor) {
 		super(monitor);
 		this.patientMonitor = monitor;
 	}

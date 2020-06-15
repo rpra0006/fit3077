@@ -42,7 +42,7 @@ public class PatientListView {
 	private PatientMonitor latestBloodPressureMonitor = new LatestMonitor(BLOOD_PRESSURE_CODE);
 	private PatientMonitor historyBloodPressureMonitor = new HistoryMonitor(BLOOD_PRESSURE_CODE);
 	
-	private MonitorView latestCholesterolTableView = new CholesterolLatestTable(latestCholesterolMonitor);
+	private MonitorView latestCholesterolTableView = new LatestCholesterolTableView(latestCholesterolMonitor);
 	private MonitorView latestCholesterolGraphView;
 	private MonitorView historyBloodTableView;
 	private MonitorView historyBloodGraphView;
