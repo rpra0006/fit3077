@@ -19,14 +19,6 @@ public abstract class MonitorView implements Observer {
 	}
 	
 	/**
-	 * Adding a patient to monitor
-	 * @param patientData (Patient object)
-	 */
-	public void addPatientToMonitor(Patient patient) {
-		this.monitor.addPatient(patient);
-	};
-	
-	/**
 	 * Starting the screen
 	 */
 	public void launchScreen() {
