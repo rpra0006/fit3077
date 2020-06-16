@@ -76,8 +76,8 @@ public class CholesterolGraphView extends GraphView {
 			choldata.setValue(cholestrolLevel, "Cholestrol Level", patient.getName().get(0).getNameAsSingleString());
 		}
 		
-		//JFreeChart jchart = ChartFactory.createBarChart("Patient Cholestrol Level", "Patient Name", "Cholestrol Value", choldata);
-		JFreeChart jchart = ChartFactory.createLineChart("Patient Cholestrol Level", "Patient Name", "Cholestrol Value", choldata);
+		JFreeChart jchart = ChartFactory.createBarChart("Patient Cholestrol Level", "Patient Name", "Cholestrol Value", choldata);
+		//JFreeChart jchart = ChartFactory.createLineChart("Patient Cholestrol Level", "Patient Name", "Cholestrol Value", choldata);
 		CategoryPlot plot = jchart.getCategoryPlot();
 		plot.setRangeGridlinePaint(Color.black);
 		
