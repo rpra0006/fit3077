@@ -32,7 +32,7 @@ import javax.swing.JToggleButton;
 import model.LatestMonitor;
 import model.PatientMonitor;
 
-public class LatestCholTableView extends TableView {
+public class LatestCholesterolTableView extends TableView {
 	/* Display the cholestrol level of patients and highlight the ones above average
 	 * in a table. Display patient data when clicked on.
 	 */
@@ -43,7 +43,7 @@ public class LatestCholTableView extends TableView {
 	private JTextField patientGenderField;
 	private JTextField patientAddressField;
 	
-	private DefaultTableModel model;
+	private DefaultTableModel model = new DefaultTableModel();
 	private JTextField txtSetTimerInterval;
 	private JTextField addressInfoField;
 	private Boolean isRunning = false;
@@ -85,7 +85,7 @@ public class LatestCholTableView extends TableView {
 	/**
 	 * Create the application.
 	 */
-	public LatestCholTableView(PatientMonitor monitor) {
+	public LatestCholesterolTableView(PatientMonitor monitor) {
 		super(monitor);
 	}
 
@@ -118,7 +118,6 @@ public class LatestCholTableView extends TableView {
 		));
 		
 		Object[] columns = {"Name", "Cholestrol Level", "Date Issued"};
-		model = new DefaultTableModel();
 		model.setColumnIdentifiers(columns);
 		table.setModel(model);
 		table.addMouseListener(new MouseAdapter() {
@@ -196,24 +195,22 @@ public class LatestCholTableView extends TableView {
 		addressInfoField.setText("Address Information");
 		addressInfoField.setBounds(789, 169, 207, 23);
 		frame.getContentPane().add(addressInfoField);
-
+		
+		MonitorView viewInstance = this;
 		frame.addWindowListener(new WindowAdapter() {
 			// Notify if cholestrol monitor is closed
 			@Override
 			public void windowClosing(WindowEvent e) {
 				System.out.println("Monitor closing");
-				monitor.stopMonitor();
-				isRunning = false;
+				monitor.detach(viewInstance);
 			}
 			
 			@Override
 			public void windowClosed(WindowEvent e) {
 				System.out.println("Monitor closed");
-				monitor.stopMonitor();
-				isRunning = false;
+				monitor.detach(viewInstance);
 			}
 		});
-		monitor.startMonitor();
 		frame.setVisible(true);
 	}
 	
