@@ -14,19 +14,20 @@ public abstract class MonitorView implements Observer {
 	 */
 	public MonitorView(PatientMonitor monitor) {
 		this.monitor = monitor;
-		monitor.attach(this);
-		//initialize();
 	}
 	
 	/**
 	 * Starting the screen
 	 */
 	public void launchScreen() {
+		MonitorView viewInstance = this;
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					initialize();
 					setRunning(true);
+					monitor.attach(viewInstance);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -55,6 +56,7 @@ public abstract class MonitorView implements Observer {
 	 * Update the contents of screen 
 	 */
 	public abstract void update();
+	
 	
 	/**
 	 * Initialize contents of view

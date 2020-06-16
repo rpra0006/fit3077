@@ -20,6 +20,7 @@ public abstract class PatientMonitor implements Subject, TimerNotifierObserver {
 	
 	public PatientMonitor(String observationCode) {
 		this.observationCode = observationCode;
+		timerNotifier.attach(this);
 	}
 	
 	@Override
@@ -57,6 +58,7 @@ public abstract class PatientMonitor implements Subject, TimerNotifierObserver {
 	 */
 	private void restartTimer() {
 		timer.cancel();
+		System.out.println(timerNotifier.getTime());
 		this.startMonitor();
 	}
 	
