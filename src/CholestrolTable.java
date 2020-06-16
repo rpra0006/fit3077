@@ -27,7 +27,7 @@ import javax.swing.JTextPane;
 import javax.swing.JFormattedTextField;
 import javax.swing.JToggleButton;
 
-public class TableView extends MonitorView {
+public class CholestrolTable extends MonitorView {
 	/* Display the cholestrol level of patients and highlight the ones above average
 	 * in a table. Display patient data when clicked on.
 	 */
@@ -38,14 +38,15 @@ public class TableView extends MonitorView {
 	private JTextField patientBirthDateField;
 	private JTextField patientGenderField;
 	private JTextField patientAddressField;
-	private PatientMonitor patientMonitor = new CholestrolMonitor();
+	private PatientMonitor cholesterolMonitor;
 	// bloodpresuremonitor;
+	//private HistoryTableView historyTable = MonitorViewFactory();
+	
+	
 	private DefaultTableModel model;
 	private JTextField txtSetTimerInterval;
 	private JTextField addressInfoField;
 	private Boolean isRunning = false;
-	private JButton btnShowHistory;
-	private JButton btnShowHistoryGraph;
 	
 	class CholesterolCellRenderer extends DefaultTableCellRenderer {
 		/*
@@ -99,8 +100,8 @@ public class TableView extends MonitorView {
 	/**
 	 * Create the application.
 	 */
-	public TableView() {
-
+	public CholestrolTable(CholestrolMonitor cholMonitor) {
+		cholesterolMonitor = cholMonitor;
 	}
 
 	/**
@@ -110,7 +111,7 @@ public class TableView extends MonitorView {
 	private void initialize() {
 		
 		frame = new JFrame();
-		frame.setBounds(100, 100, 1044, 614);
+		frame.setBounds(100, 100, 1042, 538);
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -119,7 +120,7 @@ public class TableView extends MonitorView {
 		frame.getContentPane().add(lblCholestrolLevels);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 36, 769, 530);
+		scrollPane.setBounds(10, 36, 769, 434);
 		frame.getContentPane().add(scrollPane);
 		
 		table = new JTable();
@@ -127,11 +128,11 @@ public class TableView extends MonitorView {
 			new Object[][] {
 			},
 			new String[] {
-				"Name", "Cholestrol Level", "Date Issued","Systolic Blood Pressure","Diastolic Blood Pressure","Date Issued"
+				"Name", "Cholestrol Level", "Date Issued"
 			}
 		));
 		
-		Object[] columns = {"Name", "Cholestrol Level", "Date Issued","Systolic Blood Pressure","Diastolic Blood Pressure","Date Issued"};
+		Object[] columns = {"Name", "Cholestrol Level", "Date Issued"};
 		model = new DefaultTableModel();
 		model.setColumnIdentifiers(columns);
 		table.setModel(model);
@@ -141,7 +142,7 @@ public class TableView extends MonitorView {
 				// Event for mouse click on table, to display patient data
 				int i = table.getSelectedRow();
 				String patientTableName = model.getValueAt(i, 0).toString();
-				ArrayList<Patient> patientList = patientMonitor.getAllPatients();
+				ArrayList<Patient> patientList = cholesterolMonitor.getAllPatients();
 				
 				Patient selectedPatient = null;
 				
@@ -169,12 +170,13 @@ public class TableView extends MonitorView {
 		scrollPane.setViewportView(table);
 		
 		patientNameField = new JTextField();
-		patientNameField.setText("Name");
 		patientNameField.setBounds(789, 33, 207, 23);
+		patientNameField.setText("Name");
 		frame.getContentPane().add(patientNameField);
 		patientNameField.setColumns(10);
 		
 		JButton btnRemovePatient = new JButton("Remove Patient");
+		btnRemovePatient.setBounds(809, 203, 173, 23);
 		btnRemovePatient.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Remove patient from monitor
@@ -183,7 +185,7 @@ public class TableView extends MonitorView {
 				
 				if (i >= 0) {
 					model.removeRow(i);
-					patientMonitor.removePatientByName(patientName);
+					cholesterolMonitor.removePatientByName(patientName);
 					update();
 				}
 				else {
@@ -191,16 +193,16 @@ public class TableView extends MonitorView {
 				}
 			}
 		});
-		btnRemovePatient.setBounds(809, 203, 173, 23);
 		frame.getContentPane().add(btnRemovePatient);
 		
 		txtSetTimerInterval = new JTextField();
+		txtSetTimerInterval.setBounds(789, 237, 207, 23);
 		txtSetTimerInterval.setText("Enter time in seconds...");
-		txtSetTimerInterval.setBounds(789, 305, 207, 23);
 		frame.getContentPane().add(txtSetTimerInterval);
 		txtSetTimerInterval.setColumns(10);
 		
 		JButton btnSetTimer = new JButton("Set Timer");
+		btnSetTimer.setBounds(809, 275, 173, 23);
 		btnSetTimer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Change timer interval to update data
@@ -208,63 +210,46 @@ public class TableView extends MonitorView {
 				setPatientDataTimer(second);
 			}
 		});
-		btnSetTimer.setBounds(809, 339, 173, 23);
 		frame.getContentPane().add(btnSetTimer);
 		
 		patientBirthDateField = new JTextField();
-		patientBirthDateField.setText("Birth Date");
 		patientBirthDateField.setBounds(789, 67, 207, 23);
+		patientBirthDateField.setText("Birth Date");
 		frame.getContentPane().add(patientBirthDateField);
 		
 		patientGenderField = new JTextField();
-		patientGenderField.setText("Gender");
 		patientGenderField.setBounds(789, 101, 207, 23);
+		patientGenderField.setText("Gender");
 		frame.getContentPane().add(patientGenderField);
 		
 		patientAddressField = new JTextField();
-		patientAddressField.setText("Address");
 		patientAddressField.setBounds(789, 135, 207, 23);
+		patientAddressField.setText("Address");
 		frame.getContentPane().add(patientAddressField);
 		
 		addressInfoField = new JTextField();
-		addressInfoField.setText("Address Information");
 		addressInfoField.setBounds(789, 169, 207, 23);
+		addressInfoField.setText("Address Information");
 		frame.getContentPane().add(addressInfoField);
 		
-		btnShowHistory = new JButton("Show History Table");
-		btnShowHistory.setBounds(809, 373, 173, 23);
-		frame.getContentPane().add(btnShowHistory);
-		
-		btnShowHistoryGraph = new JButton("Show History Graph");
-		btnShowHistoryGraph.setBounds(809, 407, 173, 23);
-		frame.getContentPane().add(btnShowHistoryGraph);
-		
-		JToggleButton tglbtnMonitorPatientCholestrol = new JToggleButton("Monitor Cholestrol");
-		tglbtnMonitorPatientCholestrol.setBounds(809, 237, 173, 23);
-		frame.getContentPane().add(tglbtnMonitorPatientCholestrol);
-		
-		JToggleButton tglbtnMonitorBloodPressure = new JToggleButton("Monitor Blood Pressure");
-		tglbtnMonitorBloodPressure.setBounds(809, 271, 173, 23);
-		frame.getContentPane().add(tglbtnMonitorBloodPressure);
-		
-		this.patientMonitor.attach(this);
+		this.cholesterolMonitor.attach(this);
 		frame.addWindowListener(new WindowAdapter() {
 			// Notify if cholestrol monitor is closed
 			@Override
 			public void windowClosing(WindowEvent e) {
 				System.out.println("Monitor closing");
-				patientMonitor.stopMonitor();
+				cholesterolMonitor.stopMonitor();
 				isRunning = false;
 			}
 			
 			@Override
 			public void windowClosed(WindowEvent e) {
 				System.out.println("Monitor closed");
-				patientMonitor.stopMonitor();
+				cholesterolMonitor.stopMonitor();
 				isRunning = false;
 			}
 		});
-		patientMonitor.startMonitor();
+		cholesterolMonitor.startMonitor();
 		frame.setVisible(true);
 	}
 	
@@ -273,7 +258,7 @@ public class TableView extends MonitorView {
 	 * @param Patient (patient object)
 	 */
 	public void addPatientToMonitor(Patient patientData) {
-		patientMonitor.addPatient(patientData); //Add to patientMonitor list
+		cholesterolMonitor.addPatient(patientData); //Add to patientMonitor list
 		update();
 	}
 	
@@ -282,7 +267,7 @@ public class TableView extends MonitorView {
 	 * @param timer (seconds in int)
 	 */
 	private void setPatientDataTimer(int timer) {
-		patientMonitor.setUpdateTime(timer);
+		cholesterolMonitor.setUpdateTime(timer);
 	}
 	
 	/**
@@ -294,11 +279,11 @@ public class TableView extends MonitorView {
 		float totalCholesterol = 0;
 		int patientCholCount = 0;
 		
-		for (Map.Entry<Patient, Observation> patientObservation : patientMonitor.getAllObservation().entrySet()){
+		for (Map.Entry<Patient, Observation> cholestrolObservation : cholesterolMonitor.getAllObservation().entrySet()){
 			String[] row = new String[3];
 			
-			Patient patient = patientObservation.getKey();
-			Observation observation = patientObservation.getValue();
+			Patient patient = cholestrolObservation.getKey();
+			Observation observation = cholestrolObservation.getValue();
 			
 			String cholestrolLevel;
 			String dateIssued;
@@ -313,9 +298,32 @@ public class TableView extends MonitorView {
 			row[0] = patient.getName().get(0).getNameAsSingleString();
 			row[1] = cholestrolLevel;
 			row[2] = dateIssued;
-			
 			model.addRow(row);
 		}
+		
+		/*
+		for (Map.Entry<Patient, Observation> bloodPressureObservation : patientMonitor.getAllObservation().entrySet()){
+			int row = findPatientInTable(patientName);
+			String diastolicLevel = ...;
+			String systolicLevel = ...;
+			String bpDateIssued = ...;
+			
+			
+			if (row == null){
+				row[0] = patient.getName().get(0).getNameAsSingleString();
+				row[3] = systolicLevel
+				row[4] = diastolicLevel
+				row[5] = bpDateIssued
+				model.addRow(row)
+			}
+			else{
+				model.setValueAt(systolicLevel, row, 3);
+				model.setValueAt(diastolicLevel, row, 4);
+				model.setValueAt(bpDateIssued, row, 5);
+			}
+			
+		}
+		*/
 		
 		float averageCholesterol = totalCholesterol / patientCholCount;
 		setAverageHighlighting(averageCholesterol);

@@ -27,7 +27,7 @@ import javax.swing.JTextPane;
 import javax.swing.JFormattedTextField;
 import javax.swing.JToggleButton;
 
-public class BloodPressureTable extends MonitorView {
+public class LatestBloodPressureTable extends MonitorView {
 	/* Display the cholestrol level of patients and highlight the ones above average
 	 * in a table. Display patient data when clicked on.
 	 */
@@ -41,15 +41,13 @@ public class BloodPressureTable extends MonitorView {
 	private PatientMonitor patientMonitor = new CholestrolMonitor();
 	// bloodpresuremonitor;
 	//private HistoryTableView historyTable = MonitorViewFactory();
-	
+	private int systolicX;
+	private int diastolicY;
 	
 	private DefaultTableModel model;
 	private JTextField txtSetTimerInterval;
 	private JTextField addressInfoField;
 	private Boolean isRunning = false;
-	private JButton btnShowHistoryGraph;
-	private JTextField txtSystolicX;
-	private JTextField txtDiastolicY;
 	
 	class CholesterolCellRenderer extends DefaultTableCellRenderer {
 		/*
@@ -103,7 +101,7 @@ public class BloodPressureTable extends MonitorView {
 	/**
 	 * Create the application.
 	 */
-	public BloodPressureTable() {
+	public LatestBloodPressureTable() {
 
 	}
 
@@ -118,7 +116,7 @@ public class BloodPressureTable extends MonitorView {
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		JLabel lblCholestrolLevels = new JLabel("Cholestrol Levels");
+		JLabel lblCholestrolLevels = new JLabel("Blood Pressure Levels");
 		lblCholestrolLevels.setBounds(375, 11, 135, 14);
 		frame.getContentPane().add(lblCholestrolLevels);
 		
@@ -234,30 +232,6 @@ public class BloodPressureTable extends MonitorView {
 		addressInfoField.setBounds(789, 169, 207, 23);
 		addressInfoField.setText("Address Information");
 		frame.getContentPane().add(addressInfoField);
-		
-		btnShowHistoryGraph = new JButton("Show History Graph");
-		btnShowHistoryGraph.setBounds(809, 447, 173, 23);
-		frame.getContentPane().add(btnShowHistoryGraph);
-		
-		JButton btnShowHistoryTable = new JButton("Show Patient History");
-		btnShowHistoryTable.setBounds(809, 413, 173, 23);
-		frame.getContentPane().add(btnShowHistoryTable);
-		
-		txtSystolicX = new JTextField();
-		txtSystolicX.setText("Set value for x....");
-		txtSystolicX.setBounds(789, 309, 207, 20);
-		frame.getContentPane().add(txtSystolicX);
-		txtSystolicX.setColumns(10);
-		
-		txtDiastolicY = new JTextField();
-		txtDiastolicY.setText("Set value for y....");
-		txtDiastolicY.setBounds(789, 340, 207, 20);
-		frame.getContentPane().add(txtDiastolicY);
-		txtDiastolicY.setColumns(10);
-		
-		JButton btnSetTableX = new JButton("Set Table X and Y Value");
-		btnSetTableX.setBounds(809, 379, 173, 23);
-		frame.getContentPane().add(btnSetTableX);
 		
 		this.patientMonitor.attach(this);
 		frame.addWindowListener(new WindowAdapter() {

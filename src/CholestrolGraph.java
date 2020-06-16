@@ -9,8 +9,11 @@ import javax.swing.border.TitledBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
+import java.util.Map;
 import java.awt.event.ActionEvent;
 
+import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Patient;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartFrame;
@@ -20,10 +23,13 @@ import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.data.category.DefaultCategoryDataset;
 import javax.swing.BoxLayout;
 
-public class GraphView extends MonitorView{
+public class CholestrolGraph extends MonitorView{
 	
 	private JFrame frame;
-
+	private DefaultCategoryDataset choldata;
+	private PatientMonitor patientMonitor = new CholestrolMonitor();
+	private JPanel graphPanel;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -33,8 +39,7 @@ public class GraphView extends MonitorView{
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					GraphView window = new GraphView();
-					window.frame.setVisible(true);
+					initialize();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -46,8 +51,7 @@ public class GraphView extends MonitorView{
 	/**
 	 * Create the application.
 	 */
-	public GraphView() {
-		initialize();
+	public CholestrolGraph() {
 	}
 
 	/**
@@ -65,43 +69,46 @@ public class GraphView extends MonitorView{
 		frame.getContentPane().add(graphPanel);
 		graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
 		
-		JButton btnShowBar = new JButton("Show Bar Graph");
-		btnShowBar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				DefaultCategoryDataset choldata = new DefaultCategoryDataset();
-				choldata.setValue(101.1, "Cholestrol Level", "patient1");
-				choldata.setValue(75, "Cholestrol Level", "patient2");
-				choldata.setValue(150.23, "Cholestrol Level", "patient3");
-				
-				//JFreeChart jchart = ChartFactory.createBarChart("Patient Cholestrol Level", "Patient Name", "Cholestrol Value", choldata);
-				JFreeChart jchart = ChartFactory.createLineChart("Patient Cholestrol Level", "Patient Name", "Cholestrol Value", choldata);
-				
-				CategoryPlot plot = jchart.getCategoryPlot();
-				plot.setRangeGridlinePaint(Color.black);
-				
-				ChartFrame chartfrm = new ChartFrame("Patient Cholestrol Level",jchart,true);
-				//chartfrm.setVisible(true);
-				//chartfrm.setSize(500,400);
-				
-				ChartPanel chartPanel = new ChartPanel(jchart);
-				
-				graphPanel.removeAll();
-				graphPanel.add(chartPanel);
-				graphPanel.updateUI();
-				
-			}
-		});
-		btnShowBar.setBounds(439, 503, 157, 23);
-		frame.getContentPane().add(btnShowBar);
+		patientMonitor.attach(this);
+		patientMonitor.startMonitor();
+		frame.setVisible(true);
 	}
 	
 	public void update() {
-		return;
+		graphPanel.removeAll();
+		
+		DefaultCategoryDataset choldata = new DefaultCategoryDataset();
+		
+		for (Map.Entry<Patient, Observation> patientObservation : patientMonitor.getAllObservation().entrySet()){
+			String[] row = new String[3];
+			
+			Patient patient = patientObservation.getKey();
+			Observation observation = patientObservation.getValue();
+			
+			BigDecimal cholestrolLevel;
+				
+			cholestrolLevel = observation.getValueQuantity().getValue();
+			
+			choldata.setValue(cholestrolLevel, "Cholestrol Level", patient.getName().get(0).getNameAsSingleString());
+		}
+		
+		JFreeChart jchart = ChartFactory.createBarChart("Patient Cholestrol Level", "Patient Name", "Cholestrol Value", choldata);
+		CategoryPlot plot = jchart.getCategoryPlot();
+		plot.setRangeGridlinePaint(Color.black);
+		
+		ChartFrame chartfrm = new ChartFrame("Patient Cholestrol Level",jchart,true);
+		
+		ChartPanel chartPanel = new ChartPanel(jchart);
+		
+		graphPanel.add(chartPanel);
+		graphPanel.updateUI();
 	}
 
 	@Override
 	public void addPatientToMonitor(Patient patientData) {
 		// TODO Auto-generated method stub
+		patientMonitor.addPatient(patientData); //Add to patientMonitor list
+		update();
 		
 	}
 

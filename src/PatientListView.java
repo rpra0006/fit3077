@@ -7,6 +7,8 @@ import javax.swing.JOptionPane;
 import java.awt.BorderLayout;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -27,8 +29,11 @@ public class PatientListView {
 	private JTable table;
 	private String pracId;
 	private FhirServer server = new FhirApiAdapter(); // Call server to get all patients
-	private MonitorView cholesterolView = new CholestrolTable();
+	private MonitorView cholesterolView = new CholestrolTable(new CholestrolMonitor);
 	private MonitorView graphView = new CholestrolGraph();
+	private int systolicX;
+	private int diastolicY;
+	private ArrayList<Patient> allPatients;
 	/**
 	 * Create the application.
 	 */
@@ -42,7 +47,7 @@ public class PatientListView {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 879, 571);
+		frame.setBounds(100, 100, 879, 623);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -121,9 +126,10 @@ public class PatientListView {
 				}
 			}
 		});
-		btnCholestrolLevel.setBounds(321, 413, 243, 23);
+		btnCholestrolLevel.setBounds(167, 396, 243, 23);
 		frame.getContentPane().add(btnCholestrolLevel);
 		
+		/*
 		JButton btnAddPatient = new JButton("Add Patient To Monitor");
 		btnAddPatient.addActionListener(new ActionListener() {
 			// Add patient to cholestrol monitor
@@ -151,8 +157,9 @@ public class PatientListView {
 				}
 			}
 		});
-		btnAddPatient.setBounds(321, 379, 243, 23);
+		btnAddPatient.setBounds(321, 362, 243, 23);
 		frame.getContentPane().add(btnAddPatient);
+		*/
 		
 		JButton btnShowPatientGraph = new JButton("Show Patient Cholestrol Graph");
 		btnShowPatientGraph.addActionListener(new ActionListener() {
@@ -160,13 +167,76 @@ public class PatientListView {
 				graphView.launchScreen();
 			}
 		});
-		btnShowPatientGraph.setBounds(321, 447, 243, 23);
+		btnShowPatientGraph.setBounds(460, 396, 243, 23);
 		frame.getContentPane().add(btnShowPatientGraph);
 		
 		JButton btnShowPatientBlood = new JButton("Show Patient Blood Pressure Table");
-		btnShowPatientBlood.setBounds(321, 478, 243, 23);
+		btnShowPatientBlood.setBounds(167, 468, 243, 23);
 		frame.getContentPane().add(btnShowPatientBlood);
 		
+		JButton btnShowBloodPressure = new JButton("Show Blood Pressure History Table");
+		btnShowBloodPressure.setBounds(167, 434, 243, 23);
+		frame.getContentPane().add(btnShowBloodPressure);
+		
+		JButton btnShowBloodPressure_1 = new JButton("Show Blood Pressure History Graph");
+		btnShowBloodPressure_1.setBounds(460, 434, 243, 23);
+		frame.getContentPane().add(btnShowBloodPressure_1);
+		
 		this.frame.setVisible(true);
+		table.getModel().addTableModelListener(new CheckBoxModelListener());
+		systolicX = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter maximum value for systolic reading (X):"));
+		diastolicY = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter maximum value for diastolic reading (Y):"));
+	}
+	
+	public class CheckBoxModelListener implements TableModelListener {
+		
+		@Override
+		public void tableChanged(TableModelEvent e) {
+			// TODO Auto-generated method stub
+			int row = e.getFirstRow();
+            int column = e.getColumn();
+            TableModel model = (TableModel) e.getSource();
+            String columnName = model.getColumnName(column);
+            Boolean checked = (Boolean) model.getValueAt(row, column);
+            
+            if (column == 2 ) {
+                if (checked) {
+                	addPatientToCholestrolMonitor(model.getValueAt(row, 0).toString(), row);
+                	System.out.println(model.getValueAt(row, 0).toString() + "Add to Cholestrol Table");
+                } else {
+                	System.out.println("Remove from Cholestrol Table");
+                }
+            }
+            else {
+            	if (checked) {
+            		System.out.println(model.getValueAt(row, 0).toString() + "Add to Blood Pressure Table");
+                } else {
+                	System.out.println("Remove from Blood Pressure Table");
+                }
+            }
+
+		}
+    }
+	
+	public void addPatientToCholestrolMonitor(String patientIdentifier, int row) {
+			final String cholesterolCode = "2093-3";
+			
+			Patient selectedPatient = allPatients.get(row);
+			Observation selectedPatientCholesterol = server.getPatientLatestObservation(patientIdentifier, cholesterolCode);
+			
+			if(cholesterolView != null) {
+				// Only add patient to monitor which has a cholestrol reading
+				if(selectedPatientCholesterol == null) {
+					JOptionPane.showMessageDialog(null, "Patient does not have cholesterol reading");
+				}
+				else {
+					cholesterolView.addPatientToMonitor(selectedPatient);
+					graphView.addPatientToMonitor(selectedPatient);
+				}
+			}
+	}
+	
+	public void addPatientToBloodPressureMonitor(String patientIdentifier, int row) {
+		return;
 	}
 }
