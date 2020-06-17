@@ -48,6 +48,7 @@ public class PatientListView {
 	
 	private MonitorView latestCholesterolTableView = new LatestCholesterolTableView(latestCholesterolMonitor);
 	private MonitorView latestCholesterolGraphView = new CholesterolGraphView(latestCholesterolMonitor);
+	private MonitorView latestBloodTableView = new LatestBloodTableView(latestBloodPressureMonitor);
 	private MonitorView historyBloodTableView;
 	private MonitorView historyBloodGraphView;
 	
@@ -144,38 +145,6 @@ public class PatientListView {
 		});
 		btnCholestrolLevel.setBounds(167, 396, 243, 23);
 		frame.getContentPane().add(btnCholestrolLevel);
-		
-		/*
-		JButton btnAddPatient = new JButton("Add Patient To Monitor");
-		btnAddPatient.addActionListener(new ActionListener() {
-			// Add patient to cholestrol monitor
-			public void actionPerformed(ActionEvent e) {
-				final String cholesterolCode = "2093-3";
-				int row = table.getSelectedRow();
-				
-				if(row < 0) {
-					JOptionPane.showMessageDialog(null, "Please select a patient to add");
-					return;
-				}
-				
-				Patient selectedPatient = allPatients.get(row);
-				Observation selectedPatientCholesterol = server.getPatientLatestObservation(selectedPatient.getIdentifier().get(0).getValue(), cholesterolCode);
-				
-				if(cholesterolView != null) {
-					// Only add patient to monitor which has a cholestrol reading
-					if(selectedPatientCholesterol == null) {
-						JOptionPane.showMessageDialog(null, "Patient does not have cholesterol reading");
-					}
-					else {
-						cholesterolView.addPatientToMonitor(selectedPatient);
-						graphView.addPatientToMonitor(selectedPatient);
-					}
-				}
-			}
-		});
-		btnAddPatient.setBounds(321, 362, 243, 23);
-		frame.getContentPane().add(btnAddPatient);
-		*/
 		
 		JButton btnShowPatientGraph = new JButton("Show Patient Cholesterol Graph");
 		btnShowPatientGraph.addActionListener(new ActionListener() {
