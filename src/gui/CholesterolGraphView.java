@@ -42,7 +42,7 @@ public class CholesterolGraphView extends GraphView {
 	public void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 1054, 579);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		graphPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Cholestrol Level", TitledBorder.CENTER, TitledBorder.TOP, null, Color.BLACK));
@@ -74,7 +74,7 @@ public class CholesterolGraphView extends GraphView {
 		CategoryPlot plot = jchart.getCategoryPlot();
 		plot.setRangeGridlinePaint(Color.black);
 		
-		ChartFrame chartfrm = new ChartFrame("Patient Cholestrol Level",jchart,true);
+		//ChartFrame chartfrm = new ChartFrame("Patient Cholestrol Level",jchart,true);
 		
 		ChartPanel chartPanel = new ChartPanel(jchart);
 		

@@ -264,8 +264,8 @@ public class LatestBloodTableView extends TableView {
 			String dateIssued;
 
 			// Get systolic level and diastolic level of patient blood pressure
-			systolicLevel = observation.getComponent().get(1).getValueQuantity().getValue() + " " + observation.getComponent().get(1).getValueQuantity().getUnit();
-			diastolicLevel = observation.getComponent().get(0).getValueQuantity().getValue() + " " + observation.getComponent().get(1).getValueQuantity().getUnit(); // diastolic blood pressure
+			systolicLevel = observation.getComponent().get(1).getValueQuantity().getValue().floatValue() + " " + observation.getComponent().get(1).getValueQuantity().getUnit();
+			diastolicLevel = observation.getComponent().get(0).getValueQuantity().getValue().floatValue() + " " + observation.getComponent().get(1).getValueQuantity().getUnit(); // diastolic blood pressure
 			dateIssued = observation.getIssued().toString();
 			
 			row[0] = patient.getName().get(0).getNameAsSingleString();

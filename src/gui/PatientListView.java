@@ -175,7 +175,7 @@ public class PatientListView {
 		frame.getContentPane().add(btnShowBloodPressure);
 		
 		JButton btnShowBloodPressure_1 = new JButton("Show Blood Pressure History Graph");
-		btnShowBloodPressure.addActionListener(new ActionListener() {
+		btnShowBloodPressure_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				historyBloodGraphView.launchScreen();
 			}
@@ -244,7 +244,11 @@ public class PatientListView {
             }
             else {  // Blood Pressure Column
             	if (checked) {
+            		Boolean hasBloodPressure = addPatientToBloodPressureMonitor(model.getValueAt(row, 0).toString(), row);
             		System.out.println(model.getValueAt(row, 0).toString() + "Add to Blood Pressure Table");
+            		if(!hasBloodPressure) {
+                		model.setValueAt(false, row, 3); // untick checkbox if no blood pressure
+                	}
                 } else {
                 	latestBloodPressureMonitor.removePatientByName(model.getValueAt(row, 1).toString());
                 }
@@ -282,7 +286,7 @@ public class PatientListView {
 		
 		// Only add patient to monitor which has both diastolic and systolic blood pressure reading
 		if(selectedPatientBloodPressure == null) {
-			JOptionPane.showMessageDialog(null, "Patient does not have cholesterol reading");
+			JOptionPane.showMessageDialog(null, "Patient does not have blood pressure reading");
 			return false;
 		}
 		else {

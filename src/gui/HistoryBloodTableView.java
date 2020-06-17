@@ -42,16 +42,16 @@ public class HistoryBloodTableView extends TableView {
 	public void initialize() {
 		// TODO Auto-generated method stub
 		frame = new JFrame();
-		frame.setBounds(100, 100, 804, 614);
+		frame.setBounds(100, 100, 1154, 614);
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		JLabel lblCholestrolLevels = new JLabel("Patient Systolic Blood Pressure Historical Table");
-		lblCholestrolLevels.setBounds(280, 11, 274, 14);
+		lblCholestrolLevels.setBounds(448, 11, 274, 14);
 		frame.getContentPane().add(lblCholestrolLevels);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 36, 770, 530);
+		scrollPane.setBounds(10, 36, 1120, 530);
 		frame.getContentPane().add(scrollPane);
 		
 		table = new JTable();
@@ -59,15 +59,15 @@ public class HistoryBloodTableView extends TableView {
 			new Object[][] {
 			},
 			new String[] {
-				"Patient Systolic Blood Pressure Historical Data"
+				"Historical Systolic Data"
 			}
 		));
 		
-		Object[] columns = {"Patient Systolic Blood Pressure Historical Data"};
+		Object[] columns = {"Systolic History"};
 		model = new DefaultTableModel();
 		model.setColumnIdentifiers(columns);
 		table.setModel(model);
-		table.getColumnModel().getColumn(1).setPreferredWidth(93);
+		//table.getColumnModel().getColumn(0).setPreferredWidth(93);
 		scrollPane.setViewportView(table);
 		
 		frame.addWindowListener(new WindowAdapter() {
@@ -105,7 +105,7 @@ public class HistoryBloodTableView extends TableView {
 			String patientSystolicString = "";
 			
 			for (Observation systolicValue : observation) {
-				patientSystolicString += systolicValue.getComponent().get(1).getValueQuantity().getValue() + " (" 
+				patientSystolicString += systolicValue.getComponent().get(1).getValueQuantity().getValue().floatValue() + " (" 
 						+ systolicValue.getIssued().toString() + ") ,";
 			}
 			
