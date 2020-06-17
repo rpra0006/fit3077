@@ -79,16 +79,12 @@ public class HistoryBloodGraphView extends GraphView {
 			String[] row = new String[3];
 			
 			Patient patient = patientObservation.getKey();
-			Observation observation = patientObservation.getValue().get(0);
+			int numOfObservation = 0;
 			
-			List<BigDecimal> systolicValues;
-				
-			systolicValues = observation.getValueQuantity().getValue();
-			
-			int i = 0;
-			for (BigDecimal values : systolicValues) {
-				bloodHistoryData.setValue(values, "Systolic Blood Levels", i);
-				i++;
+			for (Observation systolicObservation : patientObservation.getValue()) {
+				BigDecimal systolicValues = systolicObservation.getComponent().get(1).getValueQuantity().getValue();
+				bloodHistoryData.setValue(systolicValues, "Systolic Blood Levels", numOfObservation);
+				numOfObservation++;
 			}
 			
 			JFreeChart jchart = ChartFactory.createLineChart("Patient Systolic Blood Pressure", "Patient Name", "Systolic Blood Pressure Value", bloodHistoryData);

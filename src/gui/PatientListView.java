@@ -48,9 +48,10 @@ public class PatientListView {
 	
 	private MonitorView latestCholesterolTableView = new LatestCholesterolTableView(latestCholesterolMonitor);
 	private MonitorView latestCholesterolGraphView = new CholesterolGraphView(latestCholesterolMonitor);
-	private MonitorView latestBloodTableView = new LatestBloodTableView(latestBloodPressureMonitor);
-	private MonitorView historyBloodTableView;
-	private MonitorView historyBloodGraphView;
+	private MonitorView latestBloodTableView;
+	private MonitorView historyBloodTableView = new HistoryBloodTableView(historyBloodPressureMonitor);
+	private MonitorView historyBloodGraphView = new HistoryBloodGraphView(historyBloodPressureMonitor);
+	private float systolicX;
 	
 	private List<Patient> allPatients;
 	
@@ -156,14 +157,29 @@ public class PatientListView {
 		frame.getContentPane().add(btnShowPatientGraph);
 		
 		JButton btnShowPatientBlood = new JButton("Show Patient Blood Pressure Table");
+		btnShowPatientBlood.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				latestBloodTableView.launchScreen();
+			}
+		});
 		btnShowPatientBlood.setBounds(179, 437, 243, 23);
 		frame.getContentPane().add(btnShowPatientBlood);
 		
 		JButton btnShowBloodPressure = new JButton("Show Blood Pressure History Table");
+		btnShowBloodPressure.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				historyBloodTableView.launchScreen();
+			}
+		});
 		btnShowBloodPressure.setBounds(179, 471, 243, 23);
 		frame.getContentPane().add(btnShowBloodPressure);
 		
 		JButton btnShowBloodPressure_1 = new JButton("Show Blood Pressure History Graph");
+		btnShowBloodPressure.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				historyBloodGraphView.launchScreen();
+			}
+		});
 		btnShowBloodPressure_1.setBounds(179, 505, 243, 23);
 		frame.getContentPane().add(btnShowBloodPressure_1);
 		
@@ -179,11 +195,30 @@ public class PatientListView {
 				}
 			}
 		});
-		toggleCholesterolMonitorCheckbox.setBounds(491, 384, 243, 23);
+		toggleCholesterolMonitorCheckbox.setBounds(491, 382, 243, 23);
 		frame.getContentPane().add(toggleCholesterolMonitorCheckbox);
+		
+		JCheckBox chckbxToggleBloodPressure = new JCheckBox("Toggle Blood Pressure Monitor");
+		chckbxToggleBloodPressure.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange() == ItemEvent.SELECTED) {
+					latestBloodPressureMonitor.startMonitor();
+				}
+				else {
+					latestBloodPressureMonitor.stopMonitor();
+				}
+			}
+		});
+		chckbxToggleBloodPressure.setBounds(491, 413, 243, 23);
+		frame.getContentPane().add(chckbxToggleBloodPressure);
 		
 		this.frame.setVisible(true);
 		table.getModel().addTableModelListener(new CheckBoxModelListener());
+		
+		systolicX = Float.parseFloat(JOptionPane.showInputDialog(null, "Enter maximum value for systolic reading (X):"));
+		float diastolicY = Float.parseFloat(JOptionPane.showInputDialog(null, "Enter maximum value for diastolic reading (Y):"));
+		latestBloodTableView = new LatestBloodTableView(latestBloodPressureMonitor, systolicX, diastolicY);
 	}
 	
 	private class CheckBoxModelListener implements TableModelListener {
@@ -226,10 +261,8 @@ public class PatientListView {
 		}
 		*/
 		
-		final String cholesterolCode = "2093-3";
-		
 		Patient selectedPatient = allPatients.get(row);
-		List<Observation> selectedPatientCholesterol = server.getPatientLatestObservations(patientIdentifier, cholesterolCode, 1);
+		List<Observation> selectedPatientCholesterol = server.getPatientLatestObservations(patientIdentifier, CHOLESTEROL_CODE, 1);
 		
 		// Only add patient to monitor which has a cholestrol reading
 		if(selectedPatientCholesterol == null) {
@@ -242,7 +275,22 @@ public class PatientListView {
 		}
 	}
 	
-	public void addPatientToBloodPressureMonitor(String patientIdentifier, int row) {
-		return;
+	public Boolean addPatientToBloodPressureMonitor(String patientIdentifier, int row) {
+		
+		Patient selectedPatient = allPatients.get(row);
+		List<Observation> selectedPatientBloodPressure = server.getPatientLatestObservations(patientIdentifier, BLOOD_PRESSURE_CODE, 1);
+		
+		// Only add patient to monitor which has both diastolic and systolic blood pressure reading
+		if(selectedPatientBloodPressure == null) {
+			JOptionPane.showMessageDialog(null, "Patient does not have cholesterol reading");
+			return false;
+		}
+		else {
+			latestBloodPressureMonitor.addPatient(selectedPatient);
+			if (selectedPatientBloodPressure.get(0).getComponent().get(1).getValueQuantity().getValue().floatValue() > systolicX) {
+				historyBloodPressureMonitor.addPatient(selectedPatient);
+			}
+			return true;
+		}
 	}
 }

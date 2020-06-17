@@ -103,8 +103,10 @@ public class LatestBloodTableView extends TableView {
 	/**
 	 * Create the application.
 	 */
-	public LatestBloodTableView(PatientMonitor monitor) {
+	public LatestBloodTableView(PatientMonitor monitor, float systolicX, float diastolicY) {
 		super(monitor);
+		this.systolicX = systolicX;
+		this.diastolicY = diastolicY;	
 	}
 
 	/**
@@ -112,8 +114,6 @@ public class LatestBloodTableView extends TableView {
 	 * @wbp.parser.entryPoint
 	 */
 	public void initialize() {
-		systolicX = Float.parseFloat(JOptionPane.showInputDialog(null, "Enter maximum value for systolic reading (X):"));
-		diastolicY = Float.parseFloat(JOptionPane.showInputDialog(null, "Enter maximum value for diastolic reading (Y):"));
 		
 		frame = new JFrame();
 		frame.setBounds(100, 100, 1044, 614);
@@ -264,8 +264,8 @@ public class LatestBloodTableView extends TableView {
 			String dateIssued;
 
 			// Get systolic level and diastolic level of patient blood pressure
-			systolicLevel = observation.getValueQuantity().getValue() + " " +  observation.getValueQuantity().getUnit();
-			diastolicLevel = observation.getValueQuantity().getValue() + " " +  observation.getValueQuantity().getUnit();
+			systolicLevel = observation.getComponent().get(1).getValueQuantity().getValue() + " " + observation.getComponent().get(1).getValueQuantity().getUnit();
+			diastolicLevel = observation.getComponent().get(0).getValueQuantity().getValue() + " " + observation.getComponent().get(1).getValueQuantity().getUnit(); // diastolic blood pressure
 			dateIssued = observation.getIssued().toString();
 			
 			row[0] = patient.getName().get(0).getNameAsSingleString();

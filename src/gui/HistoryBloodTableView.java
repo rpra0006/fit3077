@@ -96,21 +96,20 @@ public class HistoryBloodTableView extends TableView {
 		model.setRowCount(0);
 		
 		for (Map.Entry<Patient, List<Observation>> patientObservation : monitor.getAllPatientObservations().entrySet()){
-			String[] row = new String[4];
+			
+			String[] row = new String[1];
 			
 			Patient patient = patientObservation.getKey();
-			Observation observation = patientObservation.getValue().get(0);
+			List<Observation> observation = patientObservation.getValue();
 			
-			String systolicLevel;
-			String diastolicLevel;
-			String dateIssued;
-
-			// Get systolic level and diastolic level of patient blood pressure
-			systolicLevel = observation.getValueQuantity().getValue() + " " +  observation.getValueQuantity().getUnit();
-			diastolicLevel = observation.getValueQuantity().getValue() + " " +  observation.getValueQuantity().getUnit();
-			dateIssued = observation.getIssued().toString();
+			String patientSystolicString = "";
 			
-			row[0] = patient.getName().get(0).getNameAsSingleString();
+			for (Observation systolicValue : observation) {
+				patientSystolicString += systolicValue.getComponent().get(1).getValueQuantity().getValue() + " (" 
+						+ systolicValue.getIssued().toString() + ") ,";
+			}
+			
+			row[0] = patient.getName().get(0).getNameAsSingleString() + ": " +  patientSystolicString;
 
 			model.addRow(row);
 		}
