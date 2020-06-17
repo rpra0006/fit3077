@@ -1,19 +1,13 @@
 package gui;
-import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import java.awt.BorderLayout;
-import javax.swing.border.LineBorder;
 import java.awt.Color;
 import javax.swing.border.TitledBorder;
 import javax.swing.border.EtchedBorder;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-import java.awt.event.ActionEvent;
 
 import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Patient;

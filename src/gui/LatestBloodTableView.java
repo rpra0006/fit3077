@@ -1,5 +1,6 @@
 package gui;
 
+import javax.swing.JOptionPane;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -28,7 +29,6 @@ import org.hl7.fhir.r4.model.Patient;
 import model.PatientMonitor;
 
 public class LatestBloodTableView extends TableView {
-	
 	/* Display the cholestrol level of patients and highlight the ones above average
 	 * in a table. Display patient data when clicked on.
 	 */
@@ -43,8 +43,8 @@ public class LatestBloodTableView extends TableView {
 	private JTextField txtSetTimerInterval;
 	private JTextField addressInfoField;
 	private Boolean isRunning = false;
-	private int systolicX;
-	private int diastolicY;
+	private float systolicX;
+	private float diastolicY;
 	
 	private class SystolicBloodCellRenderer extends DefaultTableCellRenderer {
 		/*
@@ -56,14 +56,14 @@ public class LatestBloodTableView extends TableView {
 		public Component getTableCellRendererComponent(JTable table,Object value,boolean isSelected,boolean hasFocus,int row,int column) {
 			Component c = super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
 			final String nullString = "No data";
-			String cholesterolData = (String) value;
+			String systolicData = (String) value;
 			
 			c.setForeground(null); //set foreground to null (black) first to prevent lingering highlighting
 			
 			// return if patient does not have cholesterol
-			if(cholesterolData != nullString) {
-				String[] cholesterolComponents = cholesterolData.split(" ");
-				float systolicValue = Float.parseFloat(cholesterolComponents[0]);
+			if(systolicData != nullString) {
+				String[] systolicComponents = systolicData.split(" ");
+				float systolicValue = Float.parseFloat(systolicComponents[0]);
 				
 				if(systolicValue > systolicX) {
 					c.setForeground(Color.MAGENTA);
@@ -74,7 +74,7 @@ public class LatestBloodTableView extends TableView {
 		}
 	}
 	
-	private class DiastolicBloodCellRenderer  extends DefaultTableCellRenderer{
+	private class DiastolicBloodCellRenderer extends DefaultTableCellRenderer{
 		/*
 		 * Set custom cell color to table cell
 		 */
@@ -84,20 +84,18 @@ public class LatestBloodTableView extends TableView {
 		public Component getTableCellRendererComponent(JTable table,Object value,boolean isSelected,boolean hasFocus,int row,int column) {
 			Component c = super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
 			final String nullString = "No data";
-			String cholesterolData = (String) value;
+			String diastolicData = (String) value;
 			
 			c.setForeground(null); //set foreground to null (black) first to prevent lingering highlighting
 			
-			// return if patient does not have cholesterol
-			if(cholesterolData != nullString) {
-				String[] cholesterolComponents = cholesterolData.split(" ");
-				float diastolicValue = Float.parseFloat(cholesterolComponents[0]);
-				
+			// return if patient does not have blood pressure
+			if(diastolicData != nullString) {
+				String[] diastolicComponents = diastolicData.split(" ");
+				float diastolicValue = Float.parseFloat(diastolicComponents[0]);
 				if(diastolicValue > diastolicY) {
 					c.setForeground(Color.MAGENTA);
 				}
 			}
-			
 			return c;
 		}
 	}
@@ -105,10 +103,8 @@ public class LatestBloodTableView extends TableView {
 	/**
 	 * Create the application.
 	 */
-	public LatestBloodTableView(PatientMonitor monitor, int systolicX, int diastolicY) {
+	public LatestBloodTableView(PatientMonitor monitor) {
 		super(monitor);
-		this.systolicX = systolicX;
-		this.diastolicY = diastolicY;
 	}
 
 	/**
@@ -116,6 +112,8 @@ public class LatestBloodTableView extends TableView {
 	 * @wbp.parser.entryPoint
 	 */
 	public void initialize() {
+		systolicX = Float.parseFloat(JOptionPane.showInputDialog(null, "Enter maximum value for systolic reading (X):"));
+		diastolicY = Float.parseFloat(JOptionPane.showInputDialog(null, "Enter maximum value for diastolic reading (Y):"));
 		
 		frame = new JFrame();
 		frame.setBounds(100, 100, 1044, 614);

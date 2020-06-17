@@ -1,11 +1,9 @@
 package gui;
-import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
-import java.awt.BorderLayout;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
@@ -28,7 +26,6 @@ import javax.swing.JCheckBox;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
 
@@ -51,12 +48,9 @@ public class PatientListView {
 	
 	private MonitorView latestCholesterolTableView = new LatestCholesterolTableView(latestCholesterolMonitor);
 	private MonitorView latestCholesterolGraphView = new CholesterolGraphView(latestCholesterolMonitor);
-	private MonitorView latestBloodTableView;
+	private MonitorView latestBloodTableView = new LatestBloodTableView(latestBloodPressureMonitor);
 	private MonitorView historyBloodTableView;
 	private MonitorView historyBloodGraphView;
-	
-	private int systolicX;
-	private int diastolicY;
 	
 	private List<Patient> allPatients;
 	
@@ -190,10 +184,6 @@ public class PatientListView {
 		
 		this.frame.setVisible(true);
 		table.getModel().addTableModelListener(new CheckBoxModelListener());
-		systolicX = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter maximum value for systolic reading (X):"));
-		diastolicY = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter maximum value for diastolic reading (Y):"));
-		
-		latestBloodTableView = new LatestBloodTableView(latestBloodPressureMonitor, systolicX, diastolicY);
 	}
 	
 	private class CheckBoxModelListener implements TableModelListener {
