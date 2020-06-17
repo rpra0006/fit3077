@@ -46,7 +46,35 @@ public class LatestBloodTableView extends TableView {
 	private int systolicX;
 	private int diastolicY;
 	
-	private class CholesterolCellRenderer extends DefaultTableCellRenderer {
+	private class SystolicBloodCellRenderer extends DefaultTableCellRenderer {
+		/*
+		 * Set custom cell color to table cell
+		 */
+		private static final long serialVersionUID = 1L;
+		
+		@Override
+		public Component getTableCellRendererComponent(JTable table,Object value,boolean isSelected,boolean hasFocus,int row,int column) {
+			Component c = super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
+			final String nullString = "No data";
+			String cholesterolData = (String) value;
+			
+			c.setForeground(null); //set foreground to null (black) first to prevent lingering highlighting
+			
+			// return if patient does not have cholesterol
+			if(cholesterolData != nullString) {
+				String[] cholesterolComponents = cholesterolData.split(" ");
+				float systolicValue = Float.parseFloat(cholesterolComponents[0]);
+				
+				if(systolicValue > systolicX) {
+					c.setForeground(Color.MAGENTA);
+				}
+			}
+			
+			return c;
+		}
+	}
+	
+	private class DiastolicBloodCellRenderer  extends DefaultTableCellRenderer{
 		/*
 		 * Set custom cell color to table cell
 		 */
@@ -64,17 +92,15 @@ public class LatestBloodTableView extends TableView {
 			if(cholesterolData != nullString) {
 				String[] cholesterolComponents = cholesterolData.split(" ");
 				float diastolicValue = Float.parseFloat(cholesterolComponents[0]);
-				float systolicValue;
 				
-				//if(cholesterolValue > averageChol) {
+				if(diastolicValue > diastolicY) {
 					c.setForeground(Color.MAGENTA);
-				//}
+				}
 			}
 			
 			return c;
 		}
 	}
-	
 
 	/**
 	 * Create the application.
@@ -265,12 +291,12 @@ public class LatestBloodTableView extends TableView {
 	}
 	
 	/**
-	 * Update table cell color, red if above average and black if normal
-	 * @param averageCholestrol (Float value for table's averageCholestrol) 
+	 * Update table cell color, magenta if above set value and black if below
 	 * @return void
 	 */
 	private void setAverageHighlighting() {
-		this.table.getColumnModel().getColumn(1).setCellRenderer(new CholesterolCellRenderer());
+		this.table.getColumnModel().getColumn(1).setCellRenderer(new SystolicBloodCellRenderer());
+		this.table.getColumnModel().getColumn(2).setCellRenderer(new DiastolicBloodCellRenderer());
 	}
 
 }

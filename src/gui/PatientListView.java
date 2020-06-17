@@ -149,7 +149,7 @@ public class PatientListView {
 				latestCholesterolTableView.launchScreen();
 			}
 		});
-		btnCholestrolLevel.setBounds(167, 396, 243, 23);
+		btnCholestrolLevel.setBounds(179, 369, 243, 23);
 		frame.getContentPane().add(btnCholestrolLevel);
 		
 		JButton btnShowPatientGraph = new JButton("Show Patient Cholesterol Graph");
@@ -158,19 +158,19 @@ public class PatientListView {
 				latestCholesterolGraphView.launchScreen();
 			}
 		});
-		btnShowPatientGraph.setBounds(460, 396, 243, 23);
+		btnShowPatientGraph.setBounds(179, 403, 243, 23);
 		frame.getContentPane().add(btnShowPatientGraph);
 		
 		JButton btnShowPatientBlood = new JButton("Show Patient Blood Pressure Table");
-		btnShowPatientBlood.setBounds(167, 468, 243, 23);
+		btnShowPatientBlood.setBounds(179, 437, 243, 23);
 		frame.getContentPane().add(btnShowPatientBlood);
 		
 		JButton btnShowBloodPressure = new JButton("Show Blood Pressure History Table");
-		btnShowBloodPressure.setBounds(167, 434, 243, 23);
+		btnShowBloodPressure.setBounds(179, 471, 243, 23);
 		frame.getContentPane().add(btnShowBloodPressure);
 		
 		JButton btnShowBloodPressure_1 = new JButton("Show Blood Pressure History Graph");
-		btnShowBloodPressure_1.setBounds(460, 434, 243, 23);
+		btnShowBloodPressure_1.setBounds(179, 505, 243, 23);
 		frame.getContentPane().add(btnShowBloodPressure_1);
 		
 		JCheckBox toggleCholesterolMonitorCheckbox = new JCheckBox("Toggle Cholesterol Monitor");
@@ -185,7 +185,7 @@ public class PatientListView {
 				}
 			}
 		});
-		toggleCholesterolMonitorCheckbox.setBounds(167, 501, 243, 23);
+		toggleCholesterolMonitorCheckbox.setBounds(491, 384, 243, 23);
 		frame.getContentPane().add(toggleCholesterolMonitorCheckbox);
 		
 		this.frame.setVisible(true);
