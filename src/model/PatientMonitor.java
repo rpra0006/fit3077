@@ -17,6 +17,7 @@ public abstract class PatientMonitor implements FhirSubject, TimerNotifierObserv
 	private ArrayList<Patient> patients = new ArrayList<Patient>();
 	private Timer timer;
 	private String observationCode;
+	private boolean isActive = false;
 	
 	public PatientMonitor(String observationCode) {
 		this.observationCode = observationCode;
@@ -57,14 +58,7 @@ public abstract class PatientMonitor implements FhirSubject, TimerNotifierObserv
 				}
 			}
 		}, 0, timerNotifier.getTime() * 1000);
-	}
-	
-	/**
-	 * Restart the monitor with new timer value
-	 */
-	private void restartTimer() {
-		timer.cancel();
-		this.startMonitor();
+		isActive = true;
 	}
 	
 	/**
@@ -108,6 +102,7 @@ public abstract class PatientMonitor implements FhirSubject, TimerNotifierObserv
 			// Find patient name in patient list
 			if(p.getName().get(0).getNameAsSingleString().compareTo(name) == 0) {
 				this.patients.remove(p);
+				notifyObservers();
 				return;
 			}
 		}
@@ -144,10 +139,14 @@ public abstract class PatientMonitor implements FhirSubject, TimerNotifierObserv
 	 */
 	public void stopMonitor() {
 		timer.cancel();
+		isActive = false;
 	}
 	
 	public void updateTimer() {
-		this.restartTimer();
+		if(isActive) {
+			timer.cancel();
+			this.startMonitor();
+		}
 	}
 	
 	public int getTime() {
