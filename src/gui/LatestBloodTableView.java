@@ -43,17 +43,14 @@ public class LatestBloodTableView extends TableView {
 	private JTextField txtSetTimerInterval;
 	private JTextField addressInfoField;
 	private Boolean isRunning = false;
+	private int systolicX;
+	private int diastolicY;
 	
 	private class CholesterolCellRenderer extends DefaultTableCellRenderer {
 		/*
 		 * Set custom cell color to table cell
 		 */
 		private static final long serialVersionUID = 1L;
-		float averageChol;
-		
-		public CholesterolCellRenderer(float averageChol) {
-			this.averageChol = averageChol;
-		}
 		
 		@Override
 		public Component getTableCellRendererComponent(JTable table,Object value,boolean isSelected,boolean hasFocus,int row,int column) {
@@ -66,11 +63,12 @@ public class LatestBloodTableView extends TableView {
 			// return if patient does not have cholesterol
 			if(cholesterolData != nullString) {
 				String[] cholesterolComponents = cholesterolData.split(" ");
-				float cholesterolValue = Float.parseFloat(cholesterolComponents[0]);
+				float diastolicValue = Float.parseFloat(cholesterolComponents[0]);
+				float systolicValue;
 				
-				if(cholesterolValue > averageChol) {
-					c.setForeground(Color.RED);
-				}
+				//if(cholesterolValue > averageChol) {
+					c.setForeground(Color.MAGENTA);
+				//}
 			}
 			
 			return c;
@@ -81,8 +79,10 @@ public class LatestBloodTableView extends TableView {
 	/**
 	 * Create the application.
 	 */
-	public LatestBloodTableView(PatientMonitor monitor) {
+	public LatestBloodTableView(PatientMonitor monitor, int systolicX, int diastolicY) {
 		super(monitor);
+		this.systolicX = systolicX;
+		this.diastolicY = diastolicY;
 	}
 
 	/**
@@ -96,7 +96,7 @@ public class LatestBloodTableView extends TableView {
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		JLabel lblCholestrolLevels = new JLabel("Cholestrol Levels");
+		JLabel lblCholestrolLevels = new JLabel("Blood Pressure Readings");
 		lblCholestrolLevels.setBounds(375, 11, 135, 14);
 		frame.getContentPane().add(lblCholestrolLevels);
 		
@@ -109,11 +109,11 @@ public class LatestBloodTableView extends TableView {
 			new Object[][] {
 			},
 			new String[] {
-				"Name", "Cholestrol Level", "Date Issued"
+				"Name", "Systolic Blood Pressure", "Diastolic Blood Pressure", "Date Issued"
 			}
 		));
 		
-		Object[] columns = {"Name", "Cholestrol Level", "Date Issued"};
+		Object[] columns = {"Name", "Systolic Blood Pressure", "Diastolic Blood Pressure", "Date Issued"};
 		model = new DefaultTableModel();
 		model.setColumnIdentifiers(columns);
 		table.setModel(model);
@@ -228,34 +228,31 @@ public class LatestBloodTableView extends TableView {
 	public void update() {
 		//list update
 		model.setRowCount(0);
-		float totalCholesterol = 0;
-		int patientCholCount = 0;
 		
 		for (Map.Entry<Patient, List<Observation>> patientObservation : monitor.getAllPatientObservations().entrySet()){
-			String[] row = new String[3];
+			String[] row = new String[4];
 			
 			Patient patient = patientObservation.getKey();
 			Observation observation = patientObservation.getValue().get(0);
 			
-			String cholestrolLevel;
+			String systolicLevel;
+			String diastolicLevel;
 			String dateIssued;
-			
-			// update cholesterol and count for average
-			totalCholesterol += observation.getValueQuantity().getValue().floatValue();
-			patientCholCount += 1;
-				
-			cholestrolLevel = observation.getValueQuantity().getValue() + " " +  observation.getValueQuantity().getUnit();
+
+			// Get systolic level and diastolic level of patient blood pressure
+			systolicLevel = observation.getValueQuantity().getValue() + " " +  observation.getValueQuantity().getUnit();
+			diastolicLevel = observation.getValueQuantity().getValue() + " " +  observation.getValueQuantity().getUnit();
 			dateIssued = observation.getIssued().toString();
 			
 			row[0] = patient.getName().get(0).getNameAsSingleString();
-			row[1] = cholestrolLevel;
-			row[2] = dateIssued;
+			row[1] = systolicLevel;
+			row[2] = diastolicLevel;
+			row[3] = dateIssued;
 			
 			model.addRow(row);
 		}
 		
-		float averageCholesterol = totalCholesterol / patientCholCount;
-		setAverageHighlighting(averageCholesterol);
+		setAverageHighlighting();
 	}
 	
 	/**
@@ -272,8 +269,8 @@ public class LatestBloodTableView extends TableView {
 	 * @param averageCholestrol (Float value for table's averageCholestrol) 
 	 * @return void
 	 */
-	private void setAverageHighlighting(float averageCholesterol) {
-		this.table.getColumnModel().getColumn(1).setCellRenderer(new CholesterolCellRenderer(averageCholesterol));
+	private void setAverageHighlighting() {
+		this.table.getColumnModel().getColumn(1).setCellRenderer(new CholesterolCellRenderer());
 	}
 
 }
