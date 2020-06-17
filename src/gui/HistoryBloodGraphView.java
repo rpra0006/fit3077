@@ -1,11 +1,11 @@
 package gui;
 
 import java.awt.Color;
-import java.awt.GridLayout;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -36,22 +36,23 @@ public class HistoryBloodGraphView extends GraphView {
 	 */
 	@Override
 	public void initialize() {
-		// TODO Auto-generated method stub
 		frame = new JFrame();
 		frame.setBounds(100, 100, 1054, 579);
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		graphPanel = new JPanel();
-		graphPanel.setBounds(25, 32, 987, 447);
+		graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.Y_AXIS));
 		
-		frame.getContentPane().add(graphPanel);
+		JScrollPane scrollablePane = new JScrollPane(graphPanel);
+		scrollablePane.setBounds(25, 32, 987, 447);
+		
+		frame.getContentPane().add(scrollablePane);
 		
 		JLabel lblHistoricalGraph = new JLabel("Historical Graph");
 		lblHistoricalGraph.setBounds(470, 11, 123, 14);
 		frame.getContentPane().add(lblHistoricalGraph);
 		
-		graphPanel.setLayout(new GridLayout());
 		frame.setVisible(true);
 	}
 	

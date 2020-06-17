@@ -95,7 +95,7 @@ public abstract class PatientMonitor implements FhirSubject, TimerNotifierObserv
 		
 		if(!exists) {
 			this.patients.add(p);
-			//notifyObservers();
+			notifyObservers();
 		}
 	}
 	
