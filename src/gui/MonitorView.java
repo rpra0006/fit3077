@@ -1,11 +1,9 @@
 package gui;
+
 import java.awt.EventQueue;
-
-import org.hl7.fhir.r4.model.Patient;
-
 import model.PatientMonitor;
 
-public abstract class MonitorView implements Observer {
+public abstract class MonitorView implements FhirObserver {
 	protected PatientMonitor monitor;
 	private Boolean isRunning = false;
 	
@@ -28,6 +26,7 @@ public abstract class MonitorView implements Observer {
 					initialize();
 					setRunning(true);
 					monitor.attach(viewInstance);
+					update();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

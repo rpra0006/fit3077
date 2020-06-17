@@ -1,6 +1,5 @@
 package gui;
 
-import javax.swing.JOptionPane;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -190,8 +189,8 @@ public class LatestBloodTableView extends TableView {
 		btnSetTimer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Change timer interval to update data
-				int second = Integer.parseInt(txtSetTimerInterval.getText());
-				setPatientDataTimer(second);
+				int newUpdateTime = Integer.parseInt(txtSetTimerInterval.getText());
+				monitor.setUpdateTime(newUpdateTime);
 			}
 		});
 		btnSetTimer.setBounds(809, 339, 173, 23);
@@ -237,14 +236,6 @@ public class LatestBloodTableView extends TableView {
 		frame.setVisible(true);
 	}
 	
-	
-	/**
-	 * Set timer for cholestrol table
-	 * @param timer (seconds in int)
-	 */
-	private void setPatientDataTimer(int timer) {
-		monitor.setUpdateTime(timer);
-	}
 	
 	/**
 	 * Update table data

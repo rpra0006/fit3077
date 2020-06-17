@@ -4,16 +4,16 @@ import java.util.*;
 import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Patient;
 
-import gui.Observer;
+import gui.FhirObserver;
 
-public abstract class PatientMonitor implements Subject, TimerNotifierObserver {
+public abstract class PatientMonitor implements FhirSubject, TimerNotifierObserver {
 	/*
 	 * Holds patient object list and notify observers for updates
 	 */
 	private int observationsNum; // Number of observations returned on calling getAllPatientMonitors
 	private FhirServer server = new FhirApiAdapter();
 	private SingletonTimerNotifier timerNotifier = SingletonTimerNotifier.getInstance();
-	private ArrayList<Observer> observers = new ArrayList<Observer>();
+	private ArrayList<FhirObserver> observers = new ArrayList<FhirObserver>();
 	private ArrayList<Patient> patients = new ArrayList<Patient>();
 	private Timer timer;
 	private String observationCode;
@@ -24,18 +24,18 @@ public abstract class PatientMonitor implements Subject, TimerNotifierObserver {
 	}
 	
 	@Override
-	public void attach(Observer o) {
+	public void attach(FhirObserver o) {
 		observers.add(o);
 	}
 
 	@Override
-	public void detach(Observer o) {
+	public void detach(FhirObserver o) {
 		observers.remove(o);
 	}
 
 	@Override
 	public void notifyObservers() {
-		for(Observer o: observers) {
+		for(FhirObserver o: observers) {
 			o.update();
 		}
 	}
@@ -48,7 +48,13 @@ public abstract class PatientMonitor implements Subject, TimerNotifierObserver {
 		timer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
-				notifyObservers();
+				try {
+					notifyObservers();
+				}
+				catch(ConcurrentModificationException e) {
+					// if this occurs, let it through
+					System.out.println("Concurrent modification error");
+				}
 			}
 		}, 0, timerNotifier.getTime() * 1000);
 	}
@@ -58,7 +64,6 @@ public abstract class PatientMonitor implements Subject, TimerNotifierObserver {
 	 */
 	private void restartTimer() {
 		timer.cancel();
-		System.out.println(timerNotifier.getTime());
 		this.startMonitor();
 	}
 	

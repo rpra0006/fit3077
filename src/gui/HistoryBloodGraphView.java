@@ -1,24 +1,18 @@
 package gui;
 
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneLayout;
-import javax.swing.border.EtchedBorder;
-import javax.swing.border.TitledBorder;
 
 import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Patient;
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartFrame;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
@@ -26,13 +20,11 @@ import org.jfree.chart.title.TextTitle;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import model.PatientMonitor;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 
 public class HistoryBloodGraphView extends GraphView {
 	
 	private JFrame frame;
-	private DefaultCategoryDataset bloodHistoryData;
 	private JPanel graphPanel;
 	
 	public HistoryBloodGraphView(PatientMonitor monitor) {
@@ -52,6 +44,7 @@ public class HistoryBloodGraphView extends GraphView {
 		
 		graphPanel = new JPanel();
 		graphPanel.setBounds(25, 32, 987, 447);
+		
 		frame.getContentPane().add(graphPanel);
 		
 		JLabel lblHistoricalGraph = new JLabel("Historical Graph");
@@ -60,7 +53,6 @@ public class HistoryBloodGraphView extends GraphView {
 		
 		graphPanel.setLayout(new GridLayout());
 		frame.setVisible(true);
-
 	}
 	
 	@Override
@@ -68,16 +60,15 @@ public class HistoryBloodGraphView extends GraphView {
 		// TODO Auto-generated method stub
 		graphPanel.removeAll();
 		
-		bloodHistoryData = new DefaultCategoryDataset();
 		for (Map.Entry<Patient, List<Observation>> patientObservation : monitor.getAllPatientObservations().entrySet()){
-			
+			DefaultCategoryDataset bloodHistoryData = new DefaultCategoryDataset();
 			Patient patient = patientObservation.getKey();
-			int numOfObservation = 1;
+			int observationCount = 1;
 			
 			for (Observation systolicObservation : patientObservation.getValue()) {
 				BigDecimal systolicValues = systolicObservation.getComponent().get(1).getValueQuantity().getValue();
-				bloodHistoryData.setValue(systolicValues, "Systolic Blood Levels", numOfObservation);
-				numOfObservation++;
+				bloodHistoryData.setValue(systolicValues, "Systolic Blood Levels", observationCount);
+				observationCount++;
 			}
 			
 			JFreeChart jchart = ChartFactory.createLineChart("Patient Systolic Blood Pressure", "Patient Name", "Systolic Blood Pressure Value", bloodHistoryData);
