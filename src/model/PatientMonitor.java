@@ -54,6 +54,7 @@ public abstract class PatientMonitor implements FhirSubject, TimerNotifierObserv
 				}
 				catch(ConcurrentModificationException e) {
 					// if this occurs, let it through
+					// and update observers on next timer cycle
 					System.out.println("Concurrent modification error");
 				}
 			}

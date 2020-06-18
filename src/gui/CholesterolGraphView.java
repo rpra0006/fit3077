@@ -57,8 +57,6 @@ public class CholesterolGraphView extends GraphView {
 		
 		choldata = new DefaultCategoryDataset();
 		for (Map.Entry<Patient, List<Observation>> patientObservation : monitor.getAllPatientObservations().entrySet()){
-			String[] row = new String[3];
-			
 			Patient patient = patientObservation.getKey();
 			Observation observation = patientObservation.getValue().get(0);
 			

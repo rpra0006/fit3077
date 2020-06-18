@@ -62,6 +62,39 @@ public class PatientListView {
 		this.pracId = s;
 		initialize();
 	}
+	
+	private class MonitorCheckboxItemListener implements ItemListener {
+		PatientMonitor monitor;
+		
+		public MonitorCheckboxItemListener(PatientMonitor monitor) {
+			this.monitor = monitor;
+		}
+
+		@Override
+		public void itemStateChanged(ItemEvent e) {
+			// TODO Auto-generated method stub
+			if(e.getStateChange() == ItemEvent.SELECTED) {
+				this.monitor.startMonitor();
+			}
+			else {
+				this.monitor.stopMonitor();
+			}
+		}
+	}
+	
+	private class ViewButtonActionListener implements ActionListener {
+		private MonitorView view;
+		
+		public ViewButtonActionListener(MonitorView view) {
+			this.view = view;
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			view.launchScreen();
+		}
+	}
 
 	/**
 	 * Initialize the contents of the frame.
@@ -138,93 +171,51 @@ public class PatientListView {
 		lblPatientMonitor.setBounds(409, 337, 99, 14);
 		frame.getContentPane().add(lblPatientMonitor);
 		
+		// Set button for showing cholesterol table monitor view
 		JButton btnCholestrolLevel = new JButton("Show Patient Cholesterol Table");
-		btnCholestrolLevel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				latestCholesterolTableView.launchScreen();
-			}
-		});
+		btnCholestrolLevel.addActionListener(new ViewButtonActionListener(latestCholesterolTableView));
 		btnCholestrolLevel.setBounds(179, 369, 243, 23);
 		frame.getContentPane().add(btnCholestrolLevel);
 		
+		// Set button for showing cholesterol graph monitor view
 		JButton btnShowPatientGraph = new JButton("Show Patient Cholesterol Graph");
-		btnShowPatientGraph.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				latestCholesterolGraphView.launchScreen();
-			}
-		});
+		btnShowPatientGraph.addActionListener(new ViewButtonActionListener(latestCholesterolGraphView));
 		btnShowPatientGraph.setBounds(179, 403, 243, 23);
 		frame.getContentPane().add(btnShowPatientGraph);
 		
+		// Set button for showing blood pressure table monitor view
 		JButton btnShowPatientBlood = new JButton("Show Patient Blood Pressure Table");
-		btnShowPatientBlood.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				latestBloodTableView.launchScreen();
-			}
-		});
+		btnShowPatientBlood.addActionListener(new ViewButtonActionListener(latestBloodTableView));
 		btnShowPatientBlood.setBounds(179, 437, 243, 23);
 		frame.getContentPane().add(btnShowPatientBlood);
 		
+		// Set button for showing blood pressure history table monitor view
 		JButton btnShowBloodPressure = new JButton("Show Blood Pressure History Table");
-		btnShowBloodPressure.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				historyBloodTableView.launchScreen();
-			}
-		});
+		btnShowBloodPressure.addActionListener(new ViewButtonActionListener(historyBloodTableView));
 		btnShowBloodPressure.setBounds(179, 471, 243, 23);
 		frame.getContentPane().add(btnShowBloodPressure);
 		
+		// Set button for showing blood pressure history graph monitor view
 		JButton btnShowBloodPressure_1 = new JButton("Show Blood Pressure History Graph");
-		btnShowBloodPressure_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				historyBloodGraphView.launchScreen();
-			}
-		});
+		btnShowBloodPressure_1.addActionListener(new ViewButtonActionListener(historyBloodGraphView));
 		btnShowBloodPressure_1.setBounds(179, 505, 243, 23);
 		frame.getContentPane().add(btnShowBloodPressure_1);
 		
+		// Set checkbox for turning on/off cholesterol monitor
 		JCheckBox toggleCholesterolMonitorCheckbox = new JCheckBox("Toggle Cholesterol Monitor");
-		toggleCholesterolMonitorCheckbox.addItemListener(new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				if(e.getStateChange() == ItemEvent.SELECTED) {
-					latestCholesterolMonitor.startMonitor();
-				}
-				else {
-					latestCholesterolMonitor.stopMonitor();
-				}
-			}
-		});
+		toggleCholesterolMonitorCheckbox.addItemListener(new MonitorCheckboxItemListener(latestCholesterolMonitor));
 		toggleCholesterolMonitorCheckbox.setBounds(491, 382, 243, 23);
 		frame.getContentPane().add(toggleCholesterolMonitorCheckbox);
 		
+		// Set checkbox for turning on/off blood pressure monitor
 		JCheckBox chckbxToggleBloodPressure = new JCheckBox("Toggle Blood Pressure Monitor");
-		chckbxToggleBloodPressure.addItemListener(new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				if(e.getStateChange() == ItemEvent.SELECTED) {
-					latestBloodPressureMonitor.startMonitor();
-				}
-				else {
-					latestBloodPressureMonitor.stopMonitor();
-				}
-			}
-		});
+		chckbxToggleBloodPressure.addItemListener(new MonitorCheckboxItemListener(latestBloodPressureMonitor));
 		chckbxToggleBloodPressure.setBounds(491, 413, 243, 23);
 		frame.getContentPane().add(chckbxToggleBloodPressure);
 		
+		// Set checkbox for turning on/off history monitor
 		JCheckBox toggleHistoryMonitor = new JCheckBox("Toggle History Monitor");
-		toggleHistoryMonitor.addItemListener(new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				if(e.getStateChange() == ItemEvent.SELECTED) {
-					historyBloodPressureMonitor.startMonitor();
-				}
-				else {
-					historyBloodPressureMonitor.stopMonitor();
-				}
-			}
-		});
+		toggleHistoryMonitor.addItemListener(new MonitorCheckboxItemListener(historyBloodPressureMonitor));
 		toggleHistoryMonitor.setBounds(491, 464, 243, 23);
 		frame.getContentPane().add(toggleHistoryMonitor);
 		
