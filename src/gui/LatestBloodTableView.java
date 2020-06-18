@@ -215,24 +215,24 @@ public class LatestBloodTableView extends TableView {
 		addressInfoField.setText("Address Information");
 		addressInfoField.setBounds(789, 169, 207, 23);
 		frame.getContentPane().add(addressInfoField);
-
+		
+		MonitorView instance = this;
 		frame.addWindowListener(new WindowAdapter() {
 			// Notify if cholestrol monitor is closed
 			@Override
 			public void windowClosing(WindowEvent e) {
 				System.out.println("Monitor closing");
-				monitor.stopMonitor();
+				monitor.detach(instance);
 				isRunning = false;
 			}
 			
 			@Override
 			public void windowClosed(WindowEvent e) {
 				System.out.println("Monitor closed");
-				monitor.stopMonitor();
+				monitor.detach(instance);
 				isRunning = false;
 			}
 		});
-		monitor.startMonitor();
 		frame.setVisible(true);
 	}
 	

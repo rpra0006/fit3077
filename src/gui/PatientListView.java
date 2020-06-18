@@ -76,7 +76,7 @@ public class PatientListView {
 			if(e.getStateChange() == ItemEvent.SELECTED) {
 				this.monitor.startMonitor();
 			}
-			else {
+			else if(e.getStateChange() == ItemEvent.DESELECTED){
 				this.monitor.stopMonitor();
 			}
 		}
