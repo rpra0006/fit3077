@@ -59,7 +59,7 @@ public abstract class PatientMonitor implements FhirSubject, TimerNotifierObserv
 				}
 			}
 		}, 0, timerNotifier.getTime() * 1000);
-		isActive = true;
+		this.setActiveStatus(true);
 	}
 	
 	/**
@@ -140,11 +140,11 @@ public abstract class PatientMonitor implements FhirSubject, TimerNotifierObserv
 	 */
 	public void stopMonitor() {
 		timer.cancel();
-		isActive = false;
+		this.setActiveStatus(false);
 	}
 	
 	public void updateTimer() {
-		if(isActive) {
+		if(this.getActiveStatus()) {
 			timer.cancel();
 			this.startMonitor();
 		}
@@ -164,5 +164,13 @@ public abstract class PatientMonitor implements FhirSubject, TimerNotifierObserv
 	
 	public void setObservationsNum(int newObservationsNum) {
 		this.observationsNum = newObservationsNum;
+	}
+	
+	public boolean getActiveStatus() {
+		return this.isActive;
+	}
+	
+	public void setActiveStatus(boolean active) {
+		this.isActive = active;
 	}
 }

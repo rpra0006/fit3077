@@ -206,19 +206,19 @@ public class PatientListView {
 		frame.getContentPane().add(btnShowBloodPressureHistoryGraph);
 		
 		// Set checkbox for turning on/off cholesterol monitor
-		JCheckBox toggleCholesterolMonitorCheckbox = new JCheckBox("Toggle Cholesterol Monitor");
+		JCheckBox toggleCholesterolMonitorCheckbox = new JCheckBox("Toggle Cholesterol Monitor Updates");
 		toggleCholesterolMonitorCheckbox.addItemListener(new MonitorCheckboxItemListener(latestCholesterolMonitor));
 		toggleCholesterolMonitorCheckbox.setBounds(491, 382, 243, 23);
 		frame.getContentPane().add(toggleCholesterolMonitorCheckbox);
 		
 		// Set checkbox for turning on/off blood pressure monitor
-		JCheckBox chckbxToggleBloodPressure = new JCheckBox("Toggle Blood Pressure Monitor");
+		JCheckBox chckbxToggleBloodPressure = new JCheckBox("Toggle Blood Pressure Monitor Updates");
 		chckbxToggleBloodPressure.addItemListener(new MonitorCheckboxItemListener(latestBloodPressureMonitor));
-		chckbxToggleBloodPressure.setBounds(491, 413, 243, 23);
+		chckbxToggleBloodPressure.setBounds(491, 413, 280, 23);
 		frame.getContentPane().add(chckbxToggleBloodPressure);
 		
 		// Set checkbox for turning on/off history monitor
-		JCheckBox toggleHistoryMonitor = new JCheckBox("Toggle History Monitor");
+		JCheckBox toggleHistoryMonitor = new JCheckBox("Toggle History Monitor Updates");
 		toggleHistoryMonitor.addItemListener(new MonitorCheckboxItemListener(historyBloodPressureMonitor));
 		toggleHistoryMonitor.setBounds(491, 464, 243, 23);
 		frame.getContentPane().add(toggleHistoryMonitor);
@@ -240,7 +240,6 @@ public class PatientListView {
             if (column == 2) {	// Cholestrol Column
                 if (checked) {
                 	Boolean hasCholesterol = addPatientToCholesterolMonitor(model.getValueAt(row, 0).toString(), row);
-                	System.out.println(model.getValueAt(row, 0).toString() + "Add to Cholestrol Table");
                 	if(!hasCholesterol) {
                 		model.setValueAt(false, row, 2); // untick checkbox if no cholesterol
                 	}
@@ -251,7 +250,6 @@ public class PatientListView {
             else {  // Blood Pressure Column
             	if (checked) {
             		Boolean hasBloodPressure = addPatientToBloodPressureMonitor(model.getValueAt(row, 0).toString(), row);
-            		System.out.println(model.getValueAt(row, 0).toString() + "Add to Blood Pressure Table");
             		if(!hasBloodPressure) {
                 		model.setValueAt(false, row, 3); // untick checkbox if no blood pressure
                 	}
