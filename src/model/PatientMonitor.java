@@ -4,7 +4,7 @@ import java.util.*;
 import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Patient;
 
-import gui.FhirObserver;
+import main.FhirObserver;
 
 public abstract class PatientMonitor implements FhirSubject, TimerNotifierObserver {
 	/*

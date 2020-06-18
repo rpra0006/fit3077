@@ -1,5 +1,4 @@
-package gui;
-
+package main;
 public interface FhirObserver {
 	/*
 	 * Observer class to receive and display data

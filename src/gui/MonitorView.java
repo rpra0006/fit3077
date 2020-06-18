@@ -1,6 +1,8 @@
 package gui;
 
 import java.awt.EventQueue;
+
+import main.FhirObserver;
 import model.PatientMonitor;
 
 public abstract class MonitorView implements FhirObserver {

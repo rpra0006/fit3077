@@ -1,5 +1,5 @@
 package model;
-import gui.FhirObserver;
+import main.FhirObserver;
 
 public interface FhirSubject {
 	/*

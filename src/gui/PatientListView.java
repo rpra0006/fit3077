@@ -213,7 +213,6 @@ public class PatientListView {
 		chckbxToggleBloodPressure.setBounds(491, 413, 243, 23);
 		frame.getContentPane().add(chckbxToggleBloodPressure);
 		
-		
 		JCheckBox toggleHistoryMonitor = new JCheckBox("Toggle History Monitor");
 		toggleHistoryMonitor.addItemListener(new ItemListener() {
 			@Override
