@@ -167,6 +167,10 @@ public class PatientListView {
 			model.addRow(row);	// add to table (patient identifier, patient name)
 		}
 		
+		systolicX = Float.parseFloat(JOptionPane.showInputDialog(null, "Enter maximum value for systolic reading (X):"));
+		float diastolicY = Float.parseFloat(JOptionPane.showInputDialog(null, "Enter maximum value for diastolic reading (Y):"));
+		latestBloodTableView = new LatestBloodTableView(latestBloodPressureMonitor, systolicX, diastolicY);
+		
 		JLabel lblPatientMonitor = new JLabel("Patient Monitor");
 		lblPatientMonitor.setBounds(409, 337, 99, 14);
 		frame.getContentPane().add(lblPatientMonitor);
@@ -184,22 +188,22 @@ public class PatientListView {
 		frame.getContentPane().add(btnShowPatientGraph);
 		
 		// Set button for showing blood pressure table monitor view
-		JButton btnShowPatientBlood = new JButton("Show Patient Blood Pressure Table");
-		btnShowPatientBlood.addActionListener(new ViewButtonActionListener(latestBloodTableView));
-		btnShowPatientBlood.setBounds(179, 437, 243, 23);
-		frame.getContentPane().add(btnShowPatientBlood);
+		JButton btnShowBloodPressureLatest = new JButton("Show Patient Blood Pressure Table");
+		btnShowBloodPressureLatest.addActionListener(new ViewButtonActionListener(latestBloodTableView));
+		btnShowBloodPressureLatest.setBounds(179, 437, 243, 23);
+		frame.getContentPane().add(btnShowBloodPressureLatest);
 		
 		// Set button for showing blood pressure history table monitor view
-		JButton btnShowBloodPressure = new JButton("Show Blood Pressure History Table");
-		btnShowBloodPressure.addActionListener(new ViewButtonActionListener(historyBloodTableView));
-		btnShowBloodPressure.setBounds(179, 471, 243, 23);
-		frame.getContentPane().add(btnShowBloodPressure);
+		JButton btnShowBloodPressureHistoryTable = new JButton("Show Blood Pressure History Table");
+		btnShowBloodPressureHistoryTable.addActionListener(new ViewButtonActionListener(historyBloodTableView));
+		btnShowBloodPressureHistoryTable.setBounds(179, 471, 243, 23);
+		frame.getContentPane().add(btnShowBloodPressureHistoryTable);
 		
 		// Set button for showing blood pressure history graph monitor view
-		JButton btnShowBloodPressure_1 = new JButton("Show Blood Pressure History Graph");
-		btnShowBloodPressure_1.addActionListener(new ViewButtonActionListener(historyBloodGraphView));
-		btnShowBloodPressure_1.setBounds(179, 505, 243, 23);
-		frame.getContentPane().add(btnShowBloodPressure_1);
+		JButton btnShowBloodPressureHistoryGraph = new JButton("Show Blood Pressure History Graph");
+		btnShowBloodPressureHistoryGraph.addActionListener(new ViewButtonActionListener(historyBloodGraphView));
+		btnShowBloodPressureHistoryGraph.setBounds(179, 505, 243, 23);
+		frame.getContentPane().add(btnShowBloodPressureHistoryGraph);
 		
 		// Set checkbox for turning on/off cholesterol monitor
 		JCheckBox toggleCholesterolMonitorCheckbox = new JCheckBox("Toggle Cholesterol Monitor");
@@ -221,10 +225,6 @@ public class PatientListView {
 		
 		this.frame.setVisible(true);
 		table.getModel().addTableModelListener(new CheckBoxModelListener());
-		
-		systolicX = Float.parseFloat(JOptionPane.showInputDialog(null, "Enter maximum value for systolic reading (X):"));
-		float diastolicY = Float.parseFloat(JOptionPane.showInputDialog(null, "Enter maximum value for diastolic reading (Y):"));
-		latestBloodTableView = new LatestBloodTableView(latestBloodPressureMonitor, systolicX, diastolicY);
 	}
 	
 	private class CheckBoxModelListener implements TableModelListener {
