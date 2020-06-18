@@ -46,6 +46,7 @@ public class PatientListView {
 	private PatientMonitor latestBloodPressureMonitor = new LatestMonitor(BLOOD_PRESSURE_CODE);
 	private PatientMonitor historyBloodPressureMonitor = new HistoryMonitor(BLOOD_PRESSURE_CODE);
 	
+	// Adding single instances of PatientMonitor to View objects
 	private MonitorView latestCholesterolTableView = new LatestCholesterolTableView(latestCholesterolMonitor);
 	private MonitorView latestCholesterolGraphView = new CholesterolGraphView(latestCholesterolMonitor);
 	private MonitorView latestBloodTableView;
@@ -64,12 +65,18 @@ public class PatientListView {
 	}
 	
 	private class MonitorCheckboxItemListener implements ItemListener {
+		/*
+		 * Checkbox event listener to start or stop monitor
+		 */
 		PatientMonitor monitor;
 		
 		public MonitorCheckboxItemListener(PatientMonitor monitor) {
 			this.monitor = monitor;
 		}
-
+		
+		/**
+		 * Start or stop monitor depending on state of checkbox
+		 */
 		@Override
 		public void itemStateChanged(ItemEvent e) {
 			// TODO Auto-generated method stub
@@ -81,8 +88,11 @@ public class PatientListView {
 			}
 		}
 	}
-	
+
 	private class ViewButtonActionListener implements ActionListener {
+	/*
+	 * Button event listener to display view screens
+	 */
 		private MonitorView view;
 		
 		public ViewButtonActionListener(MonitorView view) {
@@ -146,7 +156,7 @@ public class PatientListView {
                     case 1:
                         return String.class;
                     case 2:
-                        return Boolean.class;
+                        return Boolean.class;	// Create checkboxes
                     default:
                         return Boolean.class;
                 }
@@ -167,6 +177,7 @@ public class PatientListView {
 			model.addRow(row);	// add to table (patient identifier, patient name)
 		}
 		
+		// Invoke alert to practitioner to enter x and y values
 		systolicX = Float.parseFloat(JOptionPane.showInputDialog(null, "Enter maximum value for systolic reading (X):"));
 		float diastolicY = Float.parseFloat(JOptionPane.showInputDialog(null, "Enter maximum value for diastolic reading (Y):"));
 		latestBloodTableView = new LatestBloodTableView(latestBloodPressureMonitor, systolicX, diastolicY);
@@ -228,7 +239,9 @@ public class PatientListView {
 	}
 	
 	private class CheckBoxModelListener implements TableModelListener {
-		
+	/*
+	 * Add patient to monitor if checked in check box, or remove if unticked
+	 */
 		@Override
 		public void tableChanged(TableModelEvent e) {
 			// TODO Auto-generated method stub
@@ -260,14 +273,13 @@ public class PatientListView {
 		}
     }
 	
+	/**
+	 * Add patient to cholestrol monitor
+	 * @param patientIdentifier
+	 * @param row
+	 * @return Boolean
+	 */
 	public Boolean addPatientToCholesterolMonitor(String patientIdentifier, int row) {
-		
-		/*
-		if(!latestCholesterolTableView.isRunning()) {
-			System.out.println("exit.");
-			return; // if view is not running, don't do anything
-		}
-		*/
 		
 		Patient selectedPatient = allPatients.get(row);
 		List<Observation> selectedPatientCholesterol = server.getPatientLatestObservations(patientIdentifier, CHOLESTEROL_CODE, 1);
@@ -283,6 +295,12 @@ public class PatientListView {
 		}
 	}
 	
+	/**
+	 * Add patient to blood pressure monitor
+	 * @param patientIdentifier
+	 * @param row
+	 * @return
+	 */
 	public Boolean addPatientToBloodPressureMonitor(String patientIdentifier, int row) {
 		
 		Patient selectedPatient = allPatients.get(row);
@@ -295,7 +313,9 @@ public class PatientListView {
 		}
 		else {
 			latestBloodPressureMonitor.addPatient(selectedPatient);
+			// check if blood pressure is above systolicX value
 			if (selectedPatientBloodPressure.get(0).getComponent().get(1).getValueQuantity().getValue().floatValue() > systolicX) {
+				// add to history monitor if true
 				historyBloodPressureMonitor.addPatient(selectedPatient);
 			}
 			return true;

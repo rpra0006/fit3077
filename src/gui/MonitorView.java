@@ -6,6 +6,10 @@ import main.FhirObserver;
 import model.PatientMonitor;
 
 public abstract class MonitorView implements FhirObserver {
+	/*
+	 * Abstract MonitorView class for View objects inheritance
+	 */
+	
 	protected PatientMonitor monitor;
 	private Boolean isRunning = false;
 	

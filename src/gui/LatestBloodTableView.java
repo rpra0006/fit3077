@@ -28,8 +28,8 @@ import org.hl7.fhir.r4.model.Patient;
 import model.PatientMonitor;
 
 public class LatestBloodTableView extends TableView {
-	/* Display the cholestrol level of patients and highlight the ones above average
-	 * in a table. Display patient data when clicked on.
+	/* Display the blood pressure levels of patients and highlight the ones above given x and y values
+	 * in a table
 	 */
 	private JFrame frame;
 	private JTable table;
@@ -59,7 +59,7 @@ public class LatestBloodTableView extends TableView {
 			
 			c.setForeground(null); //set foreground to null (black) first to prevent lingering highlighting
 			
-			// return if patient does not have cholesterol
+			// return if patient does not have systolic reading
 			if(systolicData != nullString) {
 				String[] systolicComponents = systolicData.split(" ");
 				float systolicValue = Float.parseFloat(systolicComponents[0]);
@@ -87,7 +87,7 @@ public class LatestBloodTableView extends TableView {
 			
 			c.setForeground(null); //set foreground to null (black) first to prevent lingering highlighting
 			
-			// return if patient does not have blood pressure
+			// return if patient does not have diastolic reading
 			if(diastolicData != nullString) {
 				String[] diastolicComponents = diastolicData.split(" ");
 				float diastolicValue = Float.parseFloat(diastolicComponents[0]);
@@ -110,7 +110,6 @@ public class LatestBloodTableView extends TableView {
 
 	/**
 	 * Initialize the contents of the frame.
-	 * @wbp.parser.entryPoint
 	 */
 	public void initialize() {
 		

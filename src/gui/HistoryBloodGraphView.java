@@ -23,16 +23,23 @@ import model.PatientMonitor;
 import javax.swing.JLabel;
 
 public class HistoryBloodGraphView extends GraphView {
+	/*
+	 * Display patient systolic history in graph view
+	 */
 	
 	private JFrame frame;
 	private JPanel graphPanel;
 	
+	
+	/**
+	 * Create the application.
+	 */
 	public HistoryBloodGraphView(PatientMonitor monitor) {
 		super(monitor);
 	}
 
 	/**
-	 * @wbp.parser.entryPoint
+	 * Initialize contents of frame
 	 */
 	@Override
 	public void initialize() {
@@ -56,16 +63,21 @@ public class HistoryBloodGraphView extends GraphView {
 		frame.setVisible(true);
 	}
 	
+	/**
+	 * Update contents of panel to display historical data in graph
+	 */
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
 		graphPanel.removeAll();
 		
+		// Get all observations in monitor
 		for (Map.Entry<Patient, List<Observation>> patientObservation : monitor.getAllPatientObservations().entrySet()){
 			DefaultCategoryDataset bloodHistoryData = new DefaultCategoryDataset();
 			Patient patient = patientObservation.getKey();
 			int observationCount = 1;
 			
+			// Get all observation from observation list for plotting
 			for (Observation systolicObservation : patientObservation.getValue()) {
 				BigDecimal systolicValues = systolicObservation.getComponent().get(1).getValueQuantity().getValue();
 				bloodHistoryData.setValue(systolicValues, "Systolic Blood Levels", observationCount);
@@ -79,9 +91,9 @@ public class HistoryBloodGraphView extends GraphView {
 			
 			ChartPanel chartPanel = new ChartPanel(jchart);
 			
-			graphPanel.add(chartPanel);
+			graphPanel.add(chartPanel); // add graph to panel
 		}
 		
-		graphPanel.updateUI();
+		graphPanel.updateUI(); // update panel page
 	}
 }

@@ -17,18 +17,24 @@ import org.hl7.fhir.r4.model.Patient;
 import model.PatientMonitor;
 
 public class HistoryBloodTableView extends TableView {
+	/*
+	 * Display patient systolic history reading in table view
+	 */
 	
 	private JFrame frame;
 	private JTable table;
 	private DefaultTableModel model;
 	private Boolean isRunning = false;
 	
+	/**
+	 * Create the application.
+	 */
 	public HistoryBloodTableView(PatientMonitor monitor) {
 		super(monitor);
 	}
 
 	/**
-	 * @wbp.parser.entryPoint
+	 * Initialize contents of frame
 	 */
 	@Override
 	public void initialize() {
@@ -59,7 +65,7 @@ public class HistoryBloodTableView extends TableView {
 		model = new DefaultTableModel();
 		model.setColumnIdentifiers(columns);
 		table.setModel(model);
-		//table.getColumnModel().getColumn(0).setPreferredWidth(93);
+
 		scrollPane.setViewportView(table);
 		
 		MonitorView instance = this;
@@ -81,7 +87,10 @@ public class HistoryBloodTableView extends TableView {
 		});
 		frame.setVisible(true);
 	}
-
+	
+	/**
+	 * Update contents of panel to display historical data in table
+	 */
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
@@ -96,6 +105,7 @@ public class HistoryBloodTableView extends TableView {
 			
 			String patientSystolicString = "";
 			
+			// Display patient historical data as single string
 			for (Observation systolicValue : observation) {
 				patientSystolicString += systolicValue.getComponent().get(1).getValueQuantity().getValue().floatValue() + " (" 
 						+ systolicValue.getIssued().toString() + ") ,";

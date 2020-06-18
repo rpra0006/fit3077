@@ -22,6 +22,9 @@ import model.PatientMonitor;
 import javax.swing.BoxLayout;
 
 public class CholesterolGraphView extends GraphView {
+	/*
+	 * Display cholestrol data from monitor in graphical view
+	 */
 	
 	private JFrame frame;
 	private DefaultCategoryDataset choldata;
@@ -47,13 +50,16 @@ public class CholesterolGraphView extends GraphView {
 		graphPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Cholestrol Level", TitledBorder.CENTER, TitledBorder.TOP, null, Color.BLACK));
 		graphPanel.setBounds(27, 11, 991, 481);
 		frame.getContentPane().add(graphPanel);
-		graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
+		graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));	// add graph on x axis
 		
 		frame.setVisible(true);
 	}
 	
+	/**
+	 * Update contents of the frame to display monitor
+	 */
 	public void update() {
-		graphPanel.removeAll();
+		graphPanel.removeAll(); // clear graph panel
 		
 		choldata = new DefaultCategoryDataset();
 		for (Map.Entry<Patient, List<Observation>> patientObservation : monitor.getAllPatientObservations().entrySet()){
@@ -71,12 +77,10 @@ public class CholesterolGraphView extends GraphView {
 		CategoryPlot plot = jchart.getCategoryPlot();
 		plot.setRangeGridlinePaint(Color.black);
 		
-		//ChartFrame chartfrm = new ChartFrame("Patient Cholestrol Level",jchart,true);
-		
 		ChartPanel chartPanel = new ChartPanel(jchart);
 		
-		graphPanel.add(chartPanel);
-		graphPanel.updateUI();
+		graphPanel.add(chartPanel);	// add chart to graph panel
+		graphPanel.updateUI(); // refresh graph panel
 	}
 
 	@Override
